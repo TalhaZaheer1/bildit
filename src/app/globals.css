@@ -115,6 +115,10 @@ B (255 */
 .use-automation-zoom-in {
   animation: automation-zoom-in 0.5s;
 }
+.draggable {   
+  top: auto!important;   
+  left: auto!important;
+}
 
 @keyframes automation-zoom-in {
   0% {

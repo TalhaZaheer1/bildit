@@ -88,7 +88,7 @@ const InfoBar = ({ notifications, role, className, subAccountId }: Props) => {
                       <Avatar>
                         <AvatarImage src={user?.avatarUrl} alt="avatar" />
                         <AvatarFallback>
-                          {user.name.slice(0, 2).toUpperCase()}
+                          {user?.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">

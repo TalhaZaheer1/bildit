@@ -28,6 +28,29 @@ import Video from '@/components/icons/video_recorder'
 import Wallet from '@/components/icons/wallet'
 import Warning from '@/components/icons/warning'
 
+export const colorMappings = [
+  {
+    name:"Red",
+    code:"d9291c"
+  },
+  {
+    name:"Green",
+    code:"07a319"
+  },
+  {
+    name:"Blue",
+    code:"212beb"
+  },
+  {
+    name:"Orange",
+    code:"de7021"
+  },
+  {
+    name:"Violet",
+    code:"8521d1"
+  },
+]
+
 
 export const pricingCards = [
   {

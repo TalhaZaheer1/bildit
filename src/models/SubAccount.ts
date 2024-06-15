@@ -84,7 +84,7 @@ const subAccountSchema: Schema = new mongoose.Schema({
     },
     contacts:{
         type:[mongoose.Schema.Types.ObjectId],
-        ref:"Contant"
+        ref:"Contact"
     },
     triggers:{
         type:[mongoose.Schema.Types.ObjectId],

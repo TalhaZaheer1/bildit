@@ -2,15 +2,16 @@ import mongoose,{ Document,Schema } from "mongoose";
 import { LaneInterface } from "./Lane";
 import { UserInterface } from "./User";
 import { TagInterface } from "./Tag";
+import { ContactInterface } from "./Contact";
 
 export interface TicketInterface extends Document  {
     name:string;
-    lane:mongoose.Schema.Types.ObjectId | LaneInterface
-    order?:number;
+    lane:mongoose.Schema.Types.ObjectId | LaneInterface | string
+    order:number;
     description?:string;
     value:number;
-    customer:mongoose.Schema.Types.ObjectId;
-    assignedUser:mongoose.Schema.Types.ObjectId | UserInterface;
+    customer:mongoose.Schema.Types.ObjectId | string | ContactInterface;
+    assignedUser:mongoose.Schema.Types.ObjectId | string | UserInterface;
     tags?:mongoose.Schema.Types.ObjectId[] | TagInterface[]
     createdAt:Date;
     updatedAt:Date;
@@ -29,7 +30,8 @@ const ticketSchema: Schema = new mongoose.Schema({
     },
     order:{
         type:Number,
-        default:0
+        default:0,
+        required:true
     },
     description:String,
     value:{

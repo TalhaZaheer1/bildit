@@ -9,6 +9,7 @@ import { PipelineInterface } from "@/models/Pipeline";
 import { LaneInterface } from "@/models/Lane";
 import { TicketInterface } from "@/models/Ticket";
 import { TagInterface } from "@/models/Tag";
+import { ContactInterface } from "@/models/Contact";
 
 interface AgencyInterfaceForTable extends AgencyInterface {
   subAccounts: SubAccountInterface[];
@@ -18,7 +19,9 @@ interface PermissionInterfaceForTable extends PermissionInterface {
 }
 
 export interface TicketDetailsInterface extends TicketInterface {
+  assignedUser:UserInterface;
   tags: TagInterface[];
+  customer:ContactInterface
 }
 
 export interface LaneDetailsInterface extends LaneInterface {

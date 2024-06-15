@@ -2,6 +2,13 @@ import mongoose,{ Document, Schema } from "mongoose"
 const { Types:{ObjectId} } = mongoose;
 
 
+export interface ContactInterface extends Document {
+    name:string;
+    email:string;
+    subAccount:string | mongoose.Schema.Types.ObjectId;
+    tickets:string[] | mongoose.Schema.Types.ObjectId[]
+}
+
 const contactSchema: Schema = new mongoose.Schema({
     name:{
         type:String,
@@ -23,5 +30,6 @@ const contactSchema: Schema = new mongoose.Schema({
         required:true
     }
 },{ timestamps:true });
+
 
 export default mongoose.models["Contact"] ||  mongoose.model<Document>("Contact",contactSchema)

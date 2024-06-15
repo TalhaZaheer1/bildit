@@ -32,6 +32,7 @@ export const ModalProvider = ({children}:ModalProviderProps) => {
 
     const setOpen = async (modal:React.ReactNode,fetchData?:() => Promise<any>) => {
         if(modal){
+            console.log(fetchData)
             if(fetchData){
                 setData({...data,...(await fetchData())} || {})
             }

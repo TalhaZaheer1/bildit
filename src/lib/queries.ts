@@ -16,15 +16,23 @@ import mediaModel, { MediaInterface } from "@/models/Media";
 import { LaneDetailsInterface, TicketDetailsInterface } from "./types";
 import laneModel, { LaneInterface } from "@/models/Lane";
 import ticketModel, { TicketInterface } from "@/models/Ticket";
+import TagModal, { TagInterface } from "@/models/Tag";
+import "@/models/Contact"
 
 async function createTeamUser(user: any) {
   if (user.role === "AGENCY_OWNER") return;
   try {
+    const authUser = await currentUser()
     const newUser = await userModel.create(user);
     const res = await agencyModel.updateOne(
       { _id: user.agency },
       { $push: { users: newUser._id } }
     );
+    await clerkClient.users.updateUserMetadata(authUser.id, {
+      privateMetadata: {
+        role: user.role || "SUBACCOUNT_USER",
+      },
+    });
     return newUser;
   } catch (err) {
     console.log("user error", err);
@@ -543,7 +551,9 @@ async function deleteUser(userId: string) {
 
 async function sendInvitation(data: Partial<InvitationInterface>) {
   try {
-    const newInvitation = await invitationModel.create({ ...data });
+    const newInvitation = await invitationModel.create({ ...data,email:data.email?.toLowerCase() });
+    const invitations = await clerkClient.invitations.getInvitationList()
+    console.log(invitations)
     await clerkClient.invitations.createInvitation({
       emailAddress: data.email as string,
       redirectUrl: process.env.NEXT_PUBLIC_URL,
@@ -554,7 +564,6 @@ async function sendInvitation(data: Partial<InvitationInterface>) {
     });
   } catch (err) {
     console.log(err);
-    throw err;
   }
 }
 
@@ -675,93 +684,202 @@ const deletePipeLine = async (pipeLineId: string, subAccountId: string) => {
 
 const upsertLane = async (lane: Partial<LaneInterface>, pipeLineId: string) => {
   try {
-    let order:number;
-    if(!lane.order){
-      const allLanes = await laneModel.find({pipeline:pipeLineId}).lean();
-      order = allLanes.length
-    }else{
+    let order: number;
+    if (!lane.order) {
+      const allLanes = await laneModel.find({ pipeline: pipeLineId }).lean();
+      order = allLanes.length;
+    } else {
       order = lane.order;
     }
     const isUpserted = await laneModel.findByIdAndUpdate(
       lane._id || new Types.ObjectId(),
       {
         ...lane,
-        pipeline:pipeLineId,
-        order:order
+        pipeline: pipeLineId,
+        order: order,
       },
       {
         upsert: true,
         includeResultMetadata: true,
-        new:true
+        new: true,
       }
     );
-    if(!isUpserted.lastErrorObject?.updatedExisting){
-      const newLane = isUpserted.value
-      await pipelineModel.findByIdAndUpdate(pipeLineId,{$push:{lanes:newLane._id}})
+    console.log(isUpserted)
+    if (!isUpserted.lastErrorObject?.updatedExisting) {
+      const newLane = isUpserted.value;
+      await pipelineModel.findByIdAndUpdate(pipeLineId, {
+        $push: { lanes: newLane._id },
+      });
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 };
 
-const deleteLaneById = async (laneId:string,pipeLineId:string) => {
-  try{
-    const isDeleted = await laneModel.deleteOne({_id:laneId});
-    if(isDeleted.deletedCount === 1)
-      await pipelineModel.findByIdAndUpdate(pipeLineId,{$pull:{lanes:laneId}})
-  }catch(err){
-    console.log(err,"LANE DELETE ERRROR")
+const deleteLaneById = async (laneId: string, pipeLineId: string) => {
+  try {
+    const isDeleted = await laneModel.deleteOne({ _id: laneId });
+    if (isDeleted.deletedCount === 1)
+      await pipelineModel.findByIdAndUpdate(pipeLineId, {
+        $pull: { lanes: laneId },
+      });
+  } catch (err) {
+    console.log(err, "LANE DELETE ERRROR");
   }
-}
+};
 
-const UpsertTicket = async (newTicket:Partial<TicketInterface>,laneId:string) => {
-
-}
+const upsertTicket = async (
+  newTicket: Partial<TicketInterface>,
+  laneId: string
+) => {
+  try {
+    let order: number;
+    if (!newTicket.order) {
+      const allTickets = await ticketModel.find({ lane: laneId }).lean();
+      order = allTickets.length;
+    } else {
+      order = newTicket.order;
+    }
+    const isUpserted = await ticketModel.findByIdAndUpdate(
+      newTicket.id || new Types.ObjectId(),
+      {
+        ...newTicket,
+        customer: newTicket.customer || undefined,
+        assignedUser: newTicket.assignedUser || undefined,
+        order: order,
+      },
+      {
+        new: true,
+        upsert: true,
+        includeResultMetadata: true,
+      }
+    );
+    if (!isUpserted.lastErrorObject?.updatedExisting) {
+      await laneModel.findByIdAndUpdate(
+        { _id: laneId },
+        {
+          $push: { tickets: isUpserted.value._id },
+        }
+      );
+    }
+    console.log(isUpserted.value);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const updateLaneOrder = async (lanes: LaneDetailsInterface[]) => {
   const session: ClientSession = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
-      lanes.forEach(async (lane) => {
+      for (let i = 0; i < lanes.length; i++) {
         await laneModel.findByIdAndUpdate(
-          lane._id,
+          lanes[i]._id,
           {
-            order: lane.order,
+            order: lanes[i].order,
           },
           { session: session }
         );
-      });
+      }
     });
+    await session.endSession();
   } catch (err) {
     console.log(err);
-  } finally {
-    await session.endSession();
+    console.log(
+      "ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROR"
+    );
   }
 };
 
-const updateTicketOrder = async (tickets: TicketDetailsInterface[]) => {
+const updateTicketOrder = async (tickets: TicketDetailsInterface[],draggableId?:string,sourceLaneId?:string,destinationLaneId?:string) => {
   const session: ClientSession = await mongoose.startSession();
   try {
+    if(sourceLaneId){
+      await laneModel.findByIdAndUpdate(sourceLaneId,{$pull:{tickets:draggableId}})
+    }
+    if(destinationLaneId){
+      await laneModel.findByIdAndUpdate(destinationLaneId,{$push:{tickets:draggableId}})
+    }
     await session.withTransaction(async () => {
-      tickets.forEach(async (ticket) => {
+      for (let i = 0; i < tickets.length; i++) {
         await ticketModel.findByIdAndUpdate(
-          ticket._id,
+          tickets[i]._id,
           {
-            order: ticket.order,
-            lane: ticket.lane,
+            order: tickets[i].order,
+            lane: tickets[i].lane,
           },
           { session: session }
         );
-      });
+      };
     });
+    await session.endSession();
   } catch (err) {
     console.log(err);
-  } finally {
-    await session.endSession();
   }
 };
 
+const createTag = async (
+  newTag: Partial<TagInterface>,
+  subAccountId: string
+) => {
+  try {
+    const createdTag = await TagModal.create({
+      ...newTag,
+      subAccount: subAccountId,
+    });
+    return JSON.parse(JSON.stringify(createdTag));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
+const getTags = async (subAccountId: string) => {
+  try {
+    const tags = JSON.parse(
+      JSON.stringify(await TagModal.find({ subAccount: subAccountId }).lean())
+    );
+    return tags;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getTeamMembersAndContacts = async (subAccountId: string) => {
+  const foo = async () => {
+    "use server"
+    try {
+      const teamMembers = (
+        await permissionModel
+          .find({ subAccount: subAccountId })
+          .populate("user")
+      ).map((p) => p.user);
+      const contacts = (
+        await subAccountModel
+          .findOne({ _id: subAccountId }, { _id: 0, contacts: 1 })
+          .populate("contacts")
+      ).contacts;
+      console.log(contacts)
+      return {
+        users: JSON.parse(JSON.stringify(teamMembers)),
+        contacts: JSON.parse(JSON.stringify(contacts)),
+      };
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return foo
+};
+
+const deleteTicket = async (ticketId:string,laneId:string) => {
+  try{
+    const deleted = await ticketModel.findByIdAndDelete(ticketId);
+    if(deleted)
+      await laneModel.findByIdAndUpdate(laneId,{$pull:{tickets:ticketId}});
+  }catch(err){
+    console.log(err)
+  }
+}
 
 export {
   verifyAndAcceptInvitation,
@@ -787,7 +905,12 @@ export {
   upsertPipeLine,
   deletePipeLine,
   upsertLane,
+  upsertTicket,
   updateLaneOrder,
   updateTicketOrder,
-  deleteLaneById
+  deleteLaneById,
+  getTags,
+  createTag,
+  getTeamMembersAndContacts,
+  deleteTicket
 };
