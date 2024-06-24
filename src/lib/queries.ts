@@ -881,6 +881,61 @@ const deleteTicket = async (ticketId:string,laneId:string) => {
   }
 }
 
+<<<<<<< HEAD
+const updateFunnelProducts = async (liveProducts:string,funnelId:string) => {
+try{
+  await funnelModel.findByIdAndUpdate(funnelId,{
+    liveProducts
+  });
+}catch(err){
+  console.log(err)
+}
+}
+
+const upsertFunnelPage = async (subAccountId:string,updates:Partial<FunnelPageInterface>,funnelId:string,funnelPageId?:string) => {
+  if(!subAccountId || !funnelId) return
+  try{
+    const isUpserted = await funnelPageModel.findByIdAndUpdate(funnelPageId || new mongoose.Types.ObjectId(),{
+      ...updates,
+      content:updates.content ?  updates.content : JSON.stringify([{
+        
+          content: [],
+          id: '__body',
+          name: 'Body',
+          styles: { backgroundColor: 'white' },
+          type: '__body',
+        
+      }]),
+      funnel:funnelId
+    },{
+      upsert:true,
+      new:true,
+      includeResultMetadata:true
+    })
+    if(!isUpserted?.lastErrorObject?.updatedExisting){
+      await funnelModel.findByIdAndUpdate(funnelId,{$push:{funnelPages:isUpserted.value._id}})
+    }
+    revalidatePath(`/subaccount/${subAccountId}/funnels/${funnelId}`,"page")
+    return JSON.parse(JSON.stringify(isUpserted.value))
+  }catch(err){
+    console.log(err)
+  }
+}
+
+const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
+  try{
+    const deleted = await funnelPageModel.deleteOne({_id:funnelPageId});
+    if(deleted.deletedCount > 0)[
+      await funnelModel.findByIdAndUpdate(funnelId,{$pull:{funnelPages:funnelPageId}})
+    ]
+    
+  }catch(err){
+    console.log(err,"NEW FUNNEL PAGE ERROR")
+  }
+}
+
+=======
+>>>>>>> parent of 8c409a1 (alot of changes)
 export {
   verifyAndAcceptInvitation,
   getUserDetails,
