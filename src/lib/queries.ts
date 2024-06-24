@@ -17,12 +17,16 @@ import { LaneDetailsInterface, TicketDetailsInterface } from "./types";
 import laneModel, { LaneInterface } from "@/models/Lane";
 import ticketModel, { TicketInterface } from "@/models/Ticket";
 import TagModal, { TagInterface } from "@/models/Tag";
-import "@/models/Contact"
+import contactModel, { ContactInterface } from "@/models/Contact";
+import funnelModel from "@/models/Funnel";
+import { FunnelInterface } from "@/models/Funnel";
+import funnelPageModel, { FunnelPageInterface } from "@/models/FunnelPage";
+import { revalidatePath } from "next/cache";
 
 async function createTeamUser(user: any) {
   if (user.role === "AGENCY_OWNER") return;
   try {
-    const authUser = await currentUser()
+    const authUser = await currentUser();
     const newUser = await userModel.create(user);
     const res = await agencyModel.updateOne(
       { _id: user.agency },
@@ -551,9 +555,12 @@ async function deleteUser(userId: string) {
 
 async function sendInvitation(data: Partial<InvitationInterface>) {
   try {
-    const newInvitation = await invitationModel.create({ ...data,email:data.email?.toLowerCase() });
-    const invitations = await clerkClient.invitations.getInvitationList()
-    console.log(invitations)
+    const newInvitation = await invitationModel.create({
+      ...data,
+      email: data.email?.toLowerCase(),
+    });
+    const invitations = await clerkClient.invitations.getInvitationList();
+    console.log(invitations);
     await clerkClient.invitations.createInvitation({
       emailAddress: data.email as string,
       redirectUrl: process.env.NEXT_PUBLIC_URL,
@@ -704,7 +711,7 @@ const upsertLane = async (lane: Partial<LaneInterface>, pipeLineId: string) => {
         new: true,
       }
     );
-    console.log(isUpserted)
+    console.log(isUpserted);
     if (!isUpserted.lastErrorObject?.updatedExisting) {
       const newLane = isUpserted.value;
       await pipelineModel.findByIdAndUpdate(pipeLineId, {
@@ -791,14 +798,23 @@ const updateLaneOrder = async (lanes: LaneDetailsInterface[]) => {
   }
 };
 
-const updateTicketOrder = async (tickets: TicketDetailsInterface[],draggableId?:string,sourceLaneId?:string,destinationLaneId?:string) => {
+const updateTicketOrder = async (
+  tickets: TicketDetailsInterface[],
+  draggableId?: string,
+  sourceLaneId?: string,
+  destinationLaneId?: string
+) => {
   const session: ClientSession = await mongoose.startSession();
   try {
-    if(sourceLaneId){
-      await laneModel.findByIdAndUpdate(sourceLaneId,{$pull:{tickets:draggableId}})
+    if (sourceLaneId) {
+      await laneModel.findByIdAndUpdate(sourceLaneId, {
+        $pull: { tickets: draggableId },
+      });
     }
-    if(destinationLaneId){
-      await laneModel.findByIdAndUpdate(destinationLaneId,{$push:{tickets:draggableId}})
+    if (destinationLaneId) {
+      await laneModel.findByIdAndUpdate(destinationLaneId, {
+        $push: { tickets: draggableId },
+      });
     }
     await session.withTransaction(async () => {
       for (let i = 0; i < tickets.length; i++) {
@@ -810,7 +826,7 @@ const updateTicketOrder = async (tickets: TicketDetailsInterface[],draggableId?:
           },
           { session: session }
         );
-      };
+      }
     });
     await session.endSession();
   } catch (err) {
@@ -846,7 +862,7 @@ const getTags = async (subAccountId: string) => {
 
 const getTeamMembersAndContacts = async (subAccountId: string) => {
   const foo = async () => {
-    "use server"
+    "use server";
     try {
       const teamMembers = (
         await permissionModel
@@ -858,7 +874,7 @@ const getTeamMembersAndContacts = async (subAccountId: string) => {
           .findOne({ _id: subAccountId }, { _id: 0, contacts: 1 })
           .populate("contacts")
       ).contacts;
-      console.log(contacts)
+      console.log(contacts);
       return {
         users: JSON.parse(JSON.stringify(teamMembers)),
         contacts: JSON.parse(JSON.stringify(contacts)),
@@ -868,20 +884,94 @@ const getTeamMembersAndContacts = async (subAccountId: string) => {
     }
   };
 
-  return foo
+  return foo;
 };
 
-const deleteTicket = async (ticketId:string,laneId:string) => {
-  try{
+const deleteTicket = async (ticketId: string, laneId: string) => {
+  try {
     const deleted = await ticketModel.findByIdAndDelete(ticketId);
-    if(deleted)
-      await laneModel.findByIdAndUpdate(laneId,{$pull:{tickets:ticketId}});
+    if (deleted)
+      await laneModel.findByIdAndUpdate(laneId, {
+        $pull: { tickets: ticketId },
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const upsertContact = async (newContact: Partial<ContactInterface>) => {
+  try {
+    const isUpserted = await contactModel.findByIdAndUpdate(
+      newContact._id || new Types.ObjectId(),
+      {
+        ...newContact,
+      },
+      {
+        upsert: true,
+        new: true,
+        includeResultMetadata: true,
+      }
+    );
+    if (!isUpserted.lastErrorObject?.updatedExisting) {
+      await subAccountModel.findByIdAndUpdate(newContact.subAccount, {
+        $push: { contacts: isUpserted.value._id },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getFunnels = async (subacountId: string) => {
+  const funnels = await funnelModel
+    .find({
+      subAccount: subacountId,
+    })
+    .populate("funnelPages");
+
+  return JSON.parse(JSON.stringify(funnels));
+};
+
+const upsertFunnel = async (
+  subAccountId: string,
+  updates: Partial<FunnelInterface>,
+  funnelId: string
+) => {
+  try {
+    const isUpserted = await funnelModel.findByIdAndUpdate(funnelId, {...updates,subAccount:subAccountId}, {
+      new: true,
+      upsert: true,
+      includeResultMetadata: true,
+    });
+    if (!isUpserted.lastErrorObject?.updatedExisting) {
+      await subAccountModel.findByIdAndUpdate(subAccountId, {
+        $push: { funnels: isUpserted.value._id },
+      });
+    }
+    console.log(isUpserted)
+    return JSON.parse(JSON.stringify(isUpserted.value));
+  } catch (err) {
+    console.log(err);
+
+  }
+};
+
+const getFunnel = async (funnelId:string) => {
+  try{
+    const funnel = await funnelModel.findById(funnelId).populate({
+      path:"funnelPages",
+      options:{
+        sort:{
+          order:1
+        }
+      }
+    });
+    return JSON.parse(JSON.stringify(funnel))
   }catch(err){
     console.log(err)
   }
 }
 
-<<<<<<< HEAD
 const updateFunnelProducts = async (liveProducts:string,funnelId:string) => {
 try{
   await funnelModel.findByIdAndUpdate(funnelId,{
@@ -934,8 +1024,6 @@ const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
   }
 }
 
-=======
->>>>>>> parent of 8c409a1 (alot of changes)
 export {
   verifyAndAcceptInvitation,
   getUserDetails,
@@ -967,5 +1055,11 @@ export {
   getTags,
   createTag,
   getTeamMembersAndContacts,
-  deleteTicket
+  deleteTicket,
+  upsertContact,
+  upsertFunnel,
+  getFunnel,
+  updateFunnelProducts,
+  upsertFunnelPage,
+  deleteFunnelPage
 };

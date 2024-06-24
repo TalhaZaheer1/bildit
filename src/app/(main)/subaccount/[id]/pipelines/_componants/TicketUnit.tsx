@@ -27,7 +27,7 @@ import CustomModal from "@/components/global/CustomModal";
 import { TagInterface } from "@/models/Tag";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { deleteTicket, saveActivityLogsNotifications } from "@/lib/queries";
+import { deleteTicket, getTeamMembersAndContacts, saveActivityLogsNotifications } from "@/lib/queries";
 import { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { createPortal } from "react-dom";
 
@@ -84,7 +84,7 @@ const TicketUnit = forwardRef(({ provided,snapshot, ticketDetails, subAccountId,
               <AlertDialog>
                 <div className="flex flex-col gap-2">
                   <div
-                    onClick={() =>
+                    onClick={async () =>
                       setOpen(
                         <CustomModal
                           title="Update Ticket"
@@ -97,7 +97,8 @@ const TicketUnit = forwardRef(({ provided,snapshot, ticketDetails, subAccountId,
                             laneId={laneId}
                             tags={tags}
                           />
-                        </CustomModal>
+                        </CustomModal>,
+                        await getTeamMembersAndContacts(subAccountId)
                       )
                     }
                     className="hover:bg-white/5 rounded-md pt-2 pl-2"

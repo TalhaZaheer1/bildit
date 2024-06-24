@@ -1,5 +1,21 @@
 import mongoose,{ Document,Schema } from "mongoose";
+import { SubAccountInterface } from "./SubAccount";
+import { FunnelPageInterface } from "./FunnelPage";
+import { ClassNameInterface } from "./ClassName";
 
+export interface FunnelInterface extends Document {
+    name: string;
+    subAccount: string | mongoose.Schema.Types.ObjectId | SubAccountInterface;
+    description?: string;
+    subDomainName?: string;
+    published: boolean;
+    favicon?: string;
+    funnelPages: mongoose.Schema.Types.ObjectId[] | FunnelPageInterface[] | string; 
+    liveProducts: string;
+    classNames: mongoose.Schema.Types.ObjectId[] | ClassNameInterface[] | string;
+    updatedAt:Date;
+    createdAt:Date;
+}
 
 const funnelSchema: Schema = new mongoose.Schema({
     name:{

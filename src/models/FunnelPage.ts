@@ -1,5 +1,17 @@
 import mongoose,{ Document,Schema } from "mongoose";
+import { FunnelInterface } from "./Funnel";
 
+export interface FunnelPageInterface extends Document {
+    name: string;
+    order: number;
+    funnel: mongoose.Schema.Types.ObjectId | FunnelInterface | string;
+    pathName: string;
+    previewImage?: string;
+    visits: number;
+    content?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 const funnelPageSchema: Schema = new mongoose.Schema({
     name:{
@@ -32,6 +44,6 @@ const funnelPageSchema: Schema = new mongoose.Schema({
     }
 },{ timestamps:true })
 
-const funnelModel = mongoose.models["FunnelPage"] ||  mongoose.model<Document>("FunnelPage",funnelPageSchema);
+const funnelPageModel = mongoose.models["FunnelPage"] ||  mongoose.model<Document>("FunnelPage",funnelPageSchema);
 
-export default funnelModel
+export default funnelPageModel

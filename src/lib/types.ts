@@ -10,6 +10,9 @@ import { LaneInterface } from "@/models/Lane";
 import { TicketInterface } from "@/models/Ticket";
 import { TagInterface } from "@/models/Tag";
 import { ContactInterface } from "@/models/Contact";
+import Stripe from "stripe";
+import { FunnelInterface } from "@/models/Funnel";
+import { FunnelPageInterface } from "@/models/FunnelPage";
 
 interface AgencyInterfaceForTable extends AgencyInterface {
   subAccounts: SubAccountInterface[];
@@ -39,6 +42,18 @@ export interface UserInterfaceForTable extends UserInterface {
 
 export interface PipelineDetailsInterface extends PipelineInterface {
   lanes: LaneDetailsInterface[];
+}
+
+export interface ContactInterfaceWithTickets extends ContactInterface {
+  tickets:TicketInterface[]
+} 
+
+export interface FunnelWithPages extends FunnelInterface {
+  funnelPages:FunnelPageInterface[]
+}
+
+export interface SubAccountWithContacts extends SubAccountInterface {
+  contacts:ContactInterfaceWithTickets[]
 }
 
 export type Role =
@@ -76,6 +91,7 @@ export type StripeCustomerType = {
   shipping: ShippingInfo;
   address: Address;
 };
+
 
 export const laneFormSchema = z.object({
   name:z.string().min(1,"Please provide a name"),

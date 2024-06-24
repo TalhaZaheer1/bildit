@@ -1,6 +1,7 @@
 import mongoose,{Document,Schema,ObjectId} from "mongoose";
 import { Role } from "@/lib/types";
 import { MediaInterface } from "./Media";
+import { ContactInterface } from "./Contact";
 
 export interface SubAccountInterface extends Document{
 
@@ -24,7 +25,7 @@ export interface SubAccountInterface extends Document{
     permissions?: ObjectId[]; // Optional since ref is set
     funnels?: ObjectId[]; // Optional since ref is set
     media?: ObjectId[] | MediaInterface[]; // Optional since ref is set
-    contacts?: ObjectId[]; // Optional since ref is set
+    contacts?: ObjectId[] | ContactInterface[]; // Optional since ref is set
     triggers?: ObjectId[]; // Optional since ref is set
     automations?: ObjectId[]; // Optional since ref is set
     pipelines?: ObjectId[]; // Optional since ref is set

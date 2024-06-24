@@ -109,6 +109,7 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
       setSelectedTags((prev) => [...prev, tag]);
     };
   };
+  console.log(data)
   return (
     <Card className="max-w-[500px]">
       <CardHeader>

@@ -1,10 +1,6 @@
 import mongoose,{ Document, Schema } from "mongoose"
 const { Types:{ObjectId} } = mongoose;
 
-enum Plan {
-    price_1OYxkqFj9oKEERu1NbKUxXxN = "price_1OYxkqFj9oKEERu1NbKUxXxN" ,
-    price_1OYxkqFj9oKEERu1KfJGWxgN = "price_1OYxkqFj9oKEERu1KfJGWxgN"
-}
 
 const subscriptionSchema: Schema = new mongoose.Schema({
     agency:{
@@ -14,7 +10,7 @@ const subscriptionSchema: Schema = new mongoose.Schema({
     },
     plan:{
         type:String,
-        enum:["price_1OYxkqFj9oKEERu1NbKUxXxN","price_1OYxkqFj9oKEERu1KfJGWxgN"]
+        enum:["price_1PSrbsAMIkPxnOu6bI3BJALS","price_1PSrbsAMIkPxnOu6RgTsiPtF"]
     },
     price:String,
     active:{
@@ -34,7 +30,7 @@ const subscriptionSchema: Schema = new mongoose.Schema({
         type:Date,
         required:true
     },
-    subscritiptionId:{
+    subscriptionId:{
         type:String,
         required:true
     }

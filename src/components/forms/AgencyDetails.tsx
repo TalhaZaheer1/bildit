@@ -99,29 +99,29 @@ const AgencyDetails = ({ data }: Props) => {
       let newUserData;
       let custId="sakd";
       if (!data?._id) {
-        // const stripeData = {
-        //   name: values.name,
-        //   email: values.companyEmail,
-        //   shipping: {
-        //     address: {
-        //       city: values.city,
-        //       country: values.country,
-        //       line1: values.address,
-        //       state: values.zipCode,
-        //       postal_code: values.zipCode,
-        //     },
-        //     name: values.name,
-        //   },
-        //   address: {
-        //     city: values.city,
-        //     country: values.country,
-        //     line1: values.address,
-        //     state: values.zipCode,
-        //     postal_code: values.zipCode,
-        //   },
-        // };
-        // const res = await axios.post("/api/strip/create-customer", stripeData);
-        // custId = res.data.customerId;
+        const stripeData = {
+          name: values.name,
+          email: values.companyEmail,
+          shipping: {
+            address: {
+              city: values.city,
+              country: values.country,
+              line1: values.address,
+              state: values.zipCode,
+              postal_code: values.zipCode,
+            },
+            name: values.name,
+          },
+          address: {
+            city: values.city,
+            country: values.country,
+            line1: values.address,
+            state: values.zipCode,
+            postal_code: values.zipCode,
+          },
+        };
+        const res = await axios.post("/api/stripe/create-customer", stripeData);
+        custId = res.data.customerId;
         newUserData = await initUser({ role: "AGENCY_OWNER" });
       }
       if (!data?.customerId && !custId) return;

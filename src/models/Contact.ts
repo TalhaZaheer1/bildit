@@ -1,4 +1,5 @@
 import mongoose,{ Document, Schema } from "mongoose"
+import { TicketInterface } from "./Ticket";
 const { Types:{ObjectId} } = mongoose;
 
 
@@ -6,7 +7,9 @@ export interface ContactInterface extends Document {
     name:string;
     email:string;
     subAccount:string | mongoose.Schema.Types.ObjectId;
-    tickets:string[] | mongoose.Schema.Types.ObjectId[]
+    tickets:string[] | mongoose.Schema.Types.ObjectId[] | TicketInterface[];
+    createdAt:Date;
+    updatedAt:Date
 }
 
 const contactSchema: Schema = new mongoose.Schema({

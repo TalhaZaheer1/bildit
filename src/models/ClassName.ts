@@ -1,4 +1,17 @@
 import mongoose,{ Document,Schema } from "mongoose";
+import { FunnelInterface } from "./Funnel";
+
+
+export interface ClassNameInterface extends Document {
+    name: string;
+    funnel?: mongoose.Schema.Types.ObjectId | FunnelInterface | string;
+    color: string;
+    customData?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+
 
 
 const classNameSchema: Schema = new mongoose.Schema({
