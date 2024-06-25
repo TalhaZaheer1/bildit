@@ -116,7 +116,7 @@ toast("Success!", {
           <div className="flex flex-col w-full">
             <Input
               defaultValue={pageDetails.name}
-              className="border-none h-5 m-0 p-0 text-lg"
+              className="border-none bg-transparent h-5 m-0 p-0 text-lg"
               onBlur={handleTitleChange}
             />
             <span className="text-sm text-muted-foreground">
@@ -137,7 +137,7 @@ toast("Success!", {
               });
             }}
           >
-            <TabsList className="grid w-full grid-cold-3 bg-transparent h-fit">
+            <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
               <Tooltip>
                 <TooltipTrigger>
                   <TabsTrigger
@@ -208,16 +208,17 @@ toast("Success!", {
           >
             <Redo2 />
           </Button>
-          <div className="flex flex-col items-center mr-4">
+          <div className="flex flex-col items-center mr-4 gap-2">
             <div className="flex flex-row items-center gap-4">
               Draft
               <Switch disabled defaultChecked={true} />
               Publish
             </div>
             <span className="text-muted-foreground text-sm">
-              <Button onClick={handleOnSave}>Save</Button>
+            Last updated {pageDetails.updatedAt?.toDateString()}
             </span>
           </div>
+              <Button onClick={handleOnSave}>Save</Button>
         </aside>
       </nav>
     </TooltipProvider>

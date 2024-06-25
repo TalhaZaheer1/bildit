@@ -72,12 +72,12 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
       try {
         await upsertFunnelPage(
           subaccountId,
-          page._id,
           {
             order: index,
             name: page.name,
           },
-          funnelId
+          funnelId,
+          page._id
         )
       } catch (error) {
         console.log(error)
@@ -175,7 +175,7 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
                 <CardDescription className="flex flex-col gap-4">
                   <div className="border-2 rounded-lg sm:w-80 w-full  overflow-clip">
                     <Link
-                      href={`/subaccount/${subaccountId}/funnels/${funnelId}/editor/${clickedPage?.id}`}
+                      href={`/subaccount/${subaccountId}/funnels/${funnelId}/editor/${clickedPage?._id}`}
                       className="relative group"
                     >
                       <div className="cursor-pointer group-hover:opacity-30 w-full">

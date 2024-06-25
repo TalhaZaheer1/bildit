@@ -74,7 +74,7 @@ const MenuOptions = ({
           " bg-background/80 backdrop-blur-xl fixed top-0 border-r-[1px] p-6",
           {
             "hidden md:inline-block z-0 w-[300px]": defaultOpen,
-            "inline-block md:hidden z-[100] w-full": !defaultOpen,
+            "inline-block md:hidden z-[20] w-full": !defaultOpen,
           }
         )}
         showX={!defaultOpen}
