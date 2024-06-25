@@ -6,8 +6,11 @@ import TabList from "./tabs";
 import clsx from "clsx";
 import { useEditor } from "@/providers/editor/EditorProvider";
 import SettingsTab from "./tabs/SettingsTab";
+import MediaBucketTab from "./tabs/MediaTab";
 
-type Props = {};
+type Props = {
+  subAccountId:string
+};
 
 const EditorSideBar = (props: Props) => {
   const { state, dispatch } = useEditor();
@@ -42,6 +45,16 @@ const EditorSideBar = (props: Props) => {
                 </SheetDescription>
                 </SheetHeader>
               <SettingsTab />
+            </TabsContent>
+            <TabsContent value="Media">
+                <SheetHeader className="text-left p-6">
+                <SheetTitle>Styles</SheetTitle>
+                <SheetDescription>
+                  Show your creativity! You can customize every component as you
+                  like.
+                </SheetDescription>
+                </SheetHeader>
+              <MediaBucketTab subAccountId={props.subAccountId} />
             </TabsContent>
           </div>
         </SheetContent>

@@ -11,7 +11,7 @@ export type Element = {
   name: string;
   type: ElementTypes;
   styles: React.CSSProperties;
-  content: Element[] | {href?:string};
+  content: Element[] | {href?:string,innerText?:string};
 };
 
 export type Editor = {

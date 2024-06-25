@@ -3,7 +3,7 @@ import { FunnelPageInterface } from '@/models/FunnelPage'
 import EditorContextProvider from '@/providers/editor/EditorProvider'
 import React from 'react'
 import EditorNav from './EditorNav'
-import EditorSideBar from './sidebar'
+import EditorSideBar from './_sidebar'
 import { createPortal } from 'react-dom'
 
 type Props = {
@@ -24,7 +24,7 @@ const Main = ({id,funnelId,pageDetails}: Props) => {
       funnelId={funnelId}
       pageDetails={pageDetails}
       />
-      <EditorSideBar />
+      <EditorSideBar subAccountId={id} />
     </EditorContextProvider>
     </div>
 

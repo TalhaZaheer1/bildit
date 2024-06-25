@@ -29,7 +29,7 @@ const MediaComponant = ({ data, subAccountId }: Props) => {
       <Command className="bg-transparent">
         <CommandInput placeholder="search files..." />
         <CommandList className="pb-40 max-h-full">
-          {!!data.media.length && <CommandEmpty>No files found</CommandEmpty>}
+          {!!data?.media?.length && <CommandEmpty>No files found</CommandEmpty>}
           <CommandGroup heading="Media files">
             <div className="flex flex-wrap gap-4 pt-4">
               {data?.media.map((mediaFile) => (

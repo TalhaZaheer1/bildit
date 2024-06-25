@@ -1024,6 +1024,15 @@ const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
   }
 }
 
+const getFunnelPageDetails = async (funnelPageId:string) => {
+  try{
+    const funnePage = await funnelPageModel.findById(funnelPageId);
+    return JSON.parse(JSON.stringify(funnelPage));
+  }catch(err){
+    console.log(err)
+  }
+}
+
 
 
 export {
@@ -1063,6 +1072,7 @@ export {
   getFunnel,
   updateFunnelProducts,
   upsertFunnelPage,
-  deleteFunnelPage
+  deleteFunnelPage,
+  getFunnelPageDetails
 };
   

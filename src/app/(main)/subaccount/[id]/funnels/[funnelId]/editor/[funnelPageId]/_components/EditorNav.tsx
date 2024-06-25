@@ -88,12 +88,12 @@ toast("Success!", {
     }
   };
 
+
   const handlePreviewClick = () => {
-    dispatch({ type: "TOGGLE_PREVIEW_MODE" });
-  };
-  const handleLiveClick = () => {
-    dispatch({ type: "TOGGLE_LIVE_MODE" });
-  };
+    dispatch({ type: 'TOGGLE_PREVIEW_MODE' })
+    dispatch({ type: 'TOGGLE_LIVE_MODE' })
+  }
+  
   const handleUndo = () => {
     dispatch({ type: "UNDO" });
   };
