@@ -215,7 +215,7 @@ toast("Success!", {
               Publish
             </div>
             <span className="text-muted-foreground text-sm">
-            Last updated {pageDetails.updatedAt?.toDateString()}
+            Last updated {pageDetails.updatedAt}
             </span>
           </div>
               <Button onClick={handleOnSave}>Save</Button>

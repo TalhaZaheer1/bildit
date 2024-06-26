@@ -1,7 +1,7 @@
 "use client";
 import { ElementTypes } from "@/lib/constants";
 import { Dispatch, createContext, useContext, useReducer } from "react";
-import { EditorAction } from "./EditorActions";
+import { EditorAction, editorReducer } from "./EditorActions";
 import { FunnelPageInterface } from "@/models/FunnelPage";
 
 export type DeviceTypes = "Desktop" | "Mobile" | "Tablet";
@@ -11,7 +11,7 @@ export type Element = {
   name: string;
   type: ElementTypes;
   styles: React.CSSProperties;
-  content: Element[] | {href?:string,innerText?:string};
+  content: Element[] | {href?:string,innerText?:string,src?:string};
 };
 
 export type Editor = {
@@ -41,7 +41,7 @@ export type EditorContextType = {
   pageDetails: FunnelPageInterface | null;
 };
 
-const initialEditorUnitState: EditorState["editor"] = {
+export const initialEditorUnitState: EditorState["editor"] = {
   liveMode: false,
   previewMode: false,
   elements: [
@@ -57,7 +57,7 @@ const initialHistoryState: EditorState["history"] = {
   currentIndex: 0,
 };
 
-const initialEditorState = {
+export const initialEditorState = {
   editor: initialEditorUnitState,
   history: initialHistoryState,
 };
@@ -67,7 +67,7 @@ const initialEditorState = {
 //   history: initialHistoryState,
 // });
 
-function addElement(editorArray: Element[], action: EditorAction): Element[] {
+export function addElement(editorArray: Element[], action: EditorAction): Element[] {
   if (action.type !== "ADD_ELEMENT")
     throw Error(
       "You sent the wrong action type to the Add Element editor State"
@@ -90,7 +90,7 @@ function addElement(editorArray: Element[], action: EditorAction): Element[] {
   });
 }
 
-function updateElement(
+export function updateElement(
   editorArray: Element[],
   action: EditorAction
 ): Element[] {
@@ -116,7 +116,7 @@ function updateElement(
   });
 }
 
-function deleteElement(
+export function deleteElement(
   editorArray: Element[],
   action: EditorAction
 ): Element[] {
@@ -134,158 +134,7 @@ function deleteElement(
     return true;
   });
 }
-const editorReducer = (
-  state: EditorState = initialEditorState,
-  action: EditorAction
-): EditorState => {
-  switch (action.type) {
-    case "ADD_ELEMENT":
-      const updatedElements = addElement(state.editor.elements, action);
-      const updatedEditorUnitState = {
-        ...state.editor,
-        elements: updatedElements,
-      };
-      const updatedHistoryStack = [
-        ...state.history.stack.slice(0, state.history.currentIndex + 1),
-        updatedEditorUnitState,
-      ];
-      const updatedHistoryState = {
-        stack: updatedHistoryStack,
-        currentIndex: updatedHistoryStack.length - 1,
-      };
-      return {
-        ...state,
-        editor: updatedEditorUnitState,
-        history: updatedHistoryState,
-      };
-    case "UPDATE_ELEMENT": {
-      const updates = updateElement(state.editor.elements, action);
-      const updatedEditorUnitState = {
-        ...state.editor,
-        elements: updates,
-      };
-      const updatedHistoryStack = [
-        ...state.history.stack.slice(0, state.history.currentIndex + 1),
-        updatedEditorUnitState,
-      ];
-      return {
-        ...state,
-        editor: updatedEditorUnitState,
-        history: {
-          stack: updatedHistoryStack,
-          currentIndex: updatedHistoryStack.length - 1,
-        },
-      };
-    }
-    case "DELETE_ELEMENT": {
-      const updates = deleteElement(state.editor.elements, action);
-      const updatedEditorUnitState = {
-        ...state.editor,
-        elements: updates,
-      };
-      const updatedHistoryStack = [
-        ...state.history.stack.slice(0, state.history.currentIndex + 1),
-        updatedEditorUnitState,
-      ];
-      return {
-        ...state,
-        editor: updatedEditorUnitState,
-        history: {
-          stack: updatedHistoryStack,
-          currentIndex: updatedHistoryStack.length - 1,
-        },
-      };
-    }
-    case "CHANGE_SELECTED_ELEMENT":
-      return {
-        ...state,
-        editor: {
-          ...state.editor,
-          selectedElement: action.payload.elementDetails || {
-            id: "",
-            content: [],
-            name: "",
-            styles: {},
-            type: null,
-          },
-        },
-      };
-    case "CHANGE_DEVICE":
-      return {
-        ...state,
-        editor: {
-          ...state.editor,
-          device: action.payload.device,
-        },
-      };
-    case "TOGGLE_PREVIEW_MODE":
-      return {
-        ...state,
-        editor: {
-          ...state.editor,
-          previewMode: !state.editor.previewMode,
-        },
-      };
-    case "TOGGLE_LIVE_MODE":
-      return {
-        ...state,
-        editor: {
-          ...state.editor,
-          liveMode: action?.payload?.value || !state.editor.liveMode,
-        },
-      };
-    case "REDO":
-      if (state.history.currentIndex < state.history.stack.length - 1)
-        return {
-          ...state,
-          editor: state.history.stack[state.history.currentIndex + 1],
-          history: {
-            ...state.history,
-            currentIndex: state.history.currentIndex + 1,
-          },
-        };
-      return state;
-    case "UNDO":
-      if (state.history.currentIndex > 0)
-        return {
-          ...state,
-          editor: state.history.stack[state.history.currentIndex - 1],
-          history: {
-            ...state.history,
-            currentIndex: state.history.currentIndex - 1,
-          },
-        };
-      return state;
-    case "LOAD_DATA":
-      return {
-        ...initialEditorState,
-        editor: {
-          ...initialEditorUnitState,
-          elements: action.payload.elements || initialEditorUnitState.elements,
-          liveMode: action.payload.withLive,
-        },
-      };
-    case "SET_FUNNELPAGE_ID": {
-      const updatedEditorUnitState = {
-        ...state.editor,
-        funnelPageId: action.payload.funnelPageId,
-      };
-      return {
-        ...state,
-        editor: updatedEditorUnitState,
-        history: {
-          stack: [
-            ...state.history.stack.slice(0, state.history.currentIndex + 1),
-            updatedEditorUnitState,
-          ],
-          currentIndex: state.history.currentIndex + 1,
-        },
-      };
-    }
-    default:
-      return state;
-  }
-};
+
 
 const EditorContext = createContext<EditorContextType>({
   state: initialEditorState,

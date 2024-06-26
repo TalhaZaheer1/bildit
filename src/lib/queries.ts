@@ -1,6 +1,6 @@
 "use server";
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
 //mongo models
+import "@clerk/nextjs"
 import mongoose, { Types, ClientSession } from "mongoose";
 import permissionModel, { PermissionInterface } from "@/models/Permission";
 import invitationModel from "@/models/Invitation";
@@ -10,7 +10,6 @@ import subAccountModel, { SubAccountInterface } from "@/models/SubAccount";
 import agencyModel, { AgencyInterface } from "@/models/Agency";
 import { redirect } from "next/navigation";
 import pipelineModel, { PipelineInterface } from "@/models/Pipeline";
-import { ObjectId } from "mongoose";
 import { InvitationInterface } from "@/models/Invitation";
 import mediaModel, { MediaInterface } from "@/models/Media";
 import { LaneDetailsInterface, TicketDetailsInterface } from "./types";
@@ -22,6 +21,8 @@ import funnelModel from "@/models/Funnel";
 import { FunnelInterface } from "@/models/Funnel";
 import funnelPageModel, { FunnelPageInterface } from "@/models/FunnelPage";
 import { revalidatePath } from "next/cache";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 async function createTeamUser(user: any) {
   if (user.role === "AGENCY_OWNER") return;
@@ -32,7 +33,7 @@ async function createTeamUser(user: any) {
       { _id: user.agency },
       { $push: { users: newUser._id } }
     );
-    await clerkClient.users.updateUserMetadata(authUser.id, {
+    await clerkClient.users.updateUserMetadata(authUser?.id, {
       privateMetadata: {
         role: user.role || "SUBACCOUNT_USER",
       },
@@ -52,7 +53,8 @@ async function saveActivityLogsNotifications({
   description: string;
   subAccountId?: string;
 }) {
-  const authUser = await currentUser();
+  try{
+    const authUser = await currentUser();
   let userDetails;
   if (!authUser) {
     //in case of contacts(leads) since they are not signed in
@@ -141,10 +143,14 @@ async function saveActivityLogsNotifications({
     else agency.notifications = [newNotification._id];
     await agency.save();
   }
+}catch(err){
+  console.log(err)
+}
 }
 
 async function verifyAndAcceptInvitation() {
   const authUser = await currentUser();
+  console.log(authUser)
   if (!authUser) return redirect("/sign-in");
   const invitation = await invitationModel.findOne({
     email: authUser.emailAddresses[0].emailAddress,
@@ -176,9 +182,11 @@ async function verifyAndAcceptInvitation() {
     })
     .lean()) as Partial<UserInterface>;
   return user?.agency;
+
 }
 
 async function getUserDetails() {
+  try{
   const authUser = await currentUser();
   if (!authUser) return;
   const userDetails = await userModel
@@ -198,6 +206,9 @@ async function getUserDetails() {
     ]);
 
   return JSON.parse(JSON.stringify(userDetails)) || null;
+  }catch(err){
+    console.log(err)
+  }
 }
 
 async function updateAgencyDetails(
@@ -1026,7 +1037,7 @@ const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
 
 const getFunnelPageDetails = async (funnelPageId:string) => {
   try{
-    const funnePage = await funnelPageModel.findById(funnelPageId);
+    const funnelPage = await funnelPageModel.findById(funnelPageId);
     return JSON.parse(JSON.stringify(funnelPage));
   }catch(err){
     console.log(err)

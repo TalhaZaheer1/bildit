@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useEditor } from "@/providers/editor/EditorProvider";
 import SettingsTab from "./tabs/SettingsTab";
 import MediaBucketTab from "./tabs/MediaTab";
+import ComponentsTab from "./tabs/componants-tab";
 
 type Props = {
   subAccountId:string
@@ -48,13 +49,20 @@ const EditorSideBar = (props: Props) => {
             </TabsContent>
             <TabsContent value="Media">
                 <SheetHeader className="text-left p-6">
-                <SheetTitle>Styles</SheetTitle>
+                <SheetTitle>Media</SheetTitle>
                 <SheetDescription>
-                  Show your creativity! You can customize every component as you
+                  Show your creativity! You can select any media you
                   like.
                 </SheetDescription>
                 </SheetHeader>
               <MediaBucketTab subAccountId={props.subAccountId} />
+            </TabsContent>
+            <TabsContent value="Components">
+              <SheetHeader>
+              <SheetTitle>Components</SheetTitle>
+              <SheetDescription>Add more components</SheetDescription>
+              </SheetHeader>
+              <ComponentsTab />
             </TabsContent>
           </div>
         </SheetContent>

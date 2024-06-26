@@ -39,8 +39,9 @@ import { Slider } from '@/components/ui/slider'
 const SettingsTab = () => {
   const { state, dispatch } = useEditor();
   const selectedElement = state.editor.selectedElement;
+  console.log(selectedElement)
   const handleChangeProps = (e) => {
-    const propName = e.targer.id;
+    const propName = e.target.id;
     const value = e.target.value;
     const newPropSet = {
       [propName]: value,
@@ -62,11 +63,10 @@ const SettingsTab = () => {
 
   const handleChangeStyle = (e) => {
     const propName = e.target.id;
-    const value = e.target.value;
+    let value = e.target.value;
     const stylesObject = {
       [propName]: value,
     };
-
     dispatch({
       type: "UPDATE_ELEMENT",
       payload: {
@@ -112,7 +112,7 @@ const SettingsTab = () => {
               <Tabs
                 onValueChange={(v) =>
                   handleChangeStyle({
-                    targer: {
+                    target: {
                       id: "textAlign",
                       value: v,
                     },
@@ -423,7 +423,7 @@ const SettingsTab = () => {
                 className="!border-y-0 rounded-none !border-r-0 mr-2"
                 id="backgroundColor"
                 onChange={handleChangeStyle}
-                value={state.editor.selectedElement.styles.backgroundColor}
+                value={selectedElement.styles.backgroundColor}
               />
             </div>
           </div>

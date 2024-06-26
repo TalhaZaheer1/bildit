@@ -4,8 +4,8 @@ import { getFunnelPageDetails } from '@/lib/queries'
 import clsx from 'clsx'
 import { EyeOff } from 'lucide-react'
 import React, { useEffect } from 'react'
-import Recursive from './funnel-editor-components/recursive'
 import { useEditor } from '@/providers/editor/EditorProvider'
+import Recursive from './editor_components/Recursive'
 
 type Props = { funnelPageId: string; liveMode?: boolean }
 
@@ -52,12 +52,12 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        'use-automation-zoom-in h-full overflow-scroll mr-[385px] bg-background transition-all rounded-md',
+        'use-automation-zoom-in h-full overflow-y-scroll pr-[385px] bg-background transition-all rounded-md',
         {
           '!p-0 !mr-0':
             state.editor.previewMode === true || state.editor.liveMode === true,
-          '!w-[850px]': state.editor.device === 'Tablet',
-          '!w-[420px]': state.editor.device === 'Mobile',
+          '!w-[850px] !pr-0': state.editor.device === 'Tablet',
+          '!w-[420px] !pr-0': state.editor.device === 'Mobile',
           'w-full': state.editor.device === 'Desktop',
         }
       )}

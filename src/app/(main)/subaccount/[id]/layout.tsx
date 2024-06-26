@@ -1,3 +1,4 @@
+"use server"
 import InfoBar from '@/components/global/InfoBar'
 import Unauthorized from '@/components/global/Unauthorized'
 import Sidebar from '@/components/sidebar/Sidebar'
@@ -17,7 +18,12 @@ type Props = {
 
 const layout = async ({params,children}: Props) => {
     await dbConnect()
-    const authUser = await currentUser()
+    let authUser = {}
+    try{
+        authUser = await currentUser()
+    }catch(err){
+        console.log(err)
+    }
     if(!authUser) return redirect("/")
     const agencyId = await verifyAndAcceptInvitation()
     if(!agencyId) return <Unauthorized />

@@ -17,7 +17,7 @@ const FunnelPage = async ({ params }: Props) => {
   const funnelPageDetails = await funnelPageModel.findById(funnelPageId);
   if (!funnelPageId) redirect(`/subaccount/${id}/funnels/${funnelId}`);
 
-  return <Main id={id} funnelId={funnelId} pageDetails={funnelPageDetails} funnelPageId={funnelPageId} />;
+  return <Main id={id} funnelId={funnelId} pageDetails={JSON.parse(JSON.stringify(funnelPageDetails))} funnelPageId={funnelPageId} />;
 };
 
 export default FunnelPage;

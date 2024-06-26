@@ -11,7 +11,8 @@ type Props = {
 
 const Text = ({ element }: Props) => {
   const { dispatch, state } = useEditor();
-  const handleChangeSelected = () => {
+  const handleChangeSelected = (e) => {
+    e.stopPropagation()
     dispatch({
       type: "CHANGE_SELECTED_ELEMENT",
       payload: {
@@ -19,14 +20,14 @@ const Text = ({ element }: Props) => {
       },
     });
   };
-  const handleDeleteElement = () => [
+  const handleDeleteElement = () => {
     dispatch({
       type: "DELETE_ELEMENT",
       payload: {
         elementId: element.id,
       },
-    }),
-  ];
+    })
+  };
   return (
     <div
       style={element.styles}
@@ -39,6 +40,7 @@ const Text = ({ element }: Props) => {
           "border-slate-500 border-dashed border-[1px]": !state.editor.liveMode,
         }
       )}
+      onClick={handleChangeSelected}
     >
       {state.editor.selectedElement.id === element.id &&
         !state.editor.liveMode && (
