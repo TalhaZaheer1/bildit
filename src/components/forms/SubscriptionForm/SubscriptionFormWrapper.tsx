@@ -10,6 +10,7 @@ import { getStripe } from "@/lib/stripe/stripeClient";
 import Loading from "@/components/global/loading";
 import SubscriptionForm from ".";
 import clsx from "clsx";
+import Stripe from "stripe";
 
 type Props = {
   customerId: string;
@@ -84,7 +85,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists,agencyId }: Props) => 
   return (
     <div className="border-none transition-all">
       <div className="flex flex-col gap-4">
-        {data.plans?.plans?.map((plan) => (
+        {data.plans?.plans?.map((plan:Stripe.Price) => (
           <Card
             onClick={() => setSelectedPriceId(plan.id)}
             key={plan.id}

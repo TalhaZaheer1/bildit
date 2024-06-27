@@ -1,6 +1,6 @@
 import FunnelEditor from '@/app/(main)/subaccount/[id]/funnels/[funnelId]/editor/[funnelPageId]/_components/FunnelEditor'
 import { getDomainDetails } from '@/lib/queries'
-import funnelPageModel from '@/models/FunnelPage'
+import funnelPageModel, { FunnelPageInterface } from '@/models/FunnelPage'
 import EditorContextProvider from '@/providers/editor/EditorProvider'
 import { notFound } from 'next/navigation'
 import React from 'react'
@@ -15,7 +15,7 @@ type Props = {
 const page = async ({params}: Props) => {
     const funnelDetails = await getDomainDetails(params.domain.split(".")[0])
     if(!funnelDetails) return notFound()
-    const selectedPage = funnelDetails.funnelPages.find(page => page.pathName === params.path);
+    const selectedPage = funnelDetails.funnelPages.find((page:FunnelPageInterface) => page.pathName === params.path);
     if(!selectedPage) return notFound()
     await funnelPageModel.findByIdAndUpdate(selectedPage._id,{
         $inc:{visits:1}

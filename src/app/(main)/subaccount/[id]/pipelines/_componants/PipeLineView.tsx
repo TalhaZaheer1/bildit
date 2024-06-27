@@ -29,7 +29,9 @@ type Props = {
   pipeLineDetails: PipelineDetailsInterface;
   subAccountId: string;
   updateLaneOrder: (lanes: LaneDetailsInterface[]) => Promise<void>;
-  updateTicketOrder: (tickets: TicketDetailsInterface[]) => Promise<void>;
+  updateTicketOrder: (tickets: TicketDetailsInterface[],  draggableId?: string,
+    sourceLaneId?: string,
+    destinationLaneId?: string) => Promise<void>;
   tags: TagInterface[];
 };
 
@@ -206,8 +208,11 @@ const PipeLineView = ({
       changeTicketOrder(
         source,
         destination,
+  // @ts-ignore
         removedTicket._id,
+  // @ts-ignore
         sourceTickets,
+  // @ts-ignore
         destinationTickets
       );
     }

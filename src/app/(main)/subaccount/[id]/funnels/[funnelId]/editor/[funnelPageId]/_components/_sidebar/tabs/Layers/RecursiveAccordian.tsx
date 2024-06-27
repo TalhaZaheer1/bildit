@@ -29,7 +29,7 @@ const RecursiveAccordion = ({ elements, padding }: Props) => {
     <Accordion type="multiple">
       {elements.map((item) =>
         Array.isArray(item.content) && item.content.length ? (
-          <AccordionItem className="!border-none" value={item.id}>
+          <AccordionItem key={item.id} className="!border-none" value={item.id}>
             <AccordionTrigger
               style={{
                 paddingLeft: padding + "px",
@@ -52,6 +52,7 @@ const RecursiveAccordion = ({ elements, padding }: Props) => {
           </AccordionItem>
         ) : (
           <div
+          key={item.id}
             style={{
               paddingLeft: padding + "px",
               paddingRight:"10px"

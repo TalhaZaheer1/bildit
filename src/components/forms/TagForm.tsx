@@ -97,8 +97,8 @@ const TagForm = ({ subAccountId }: Props) => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {colorMappings.map((color) => (
-                            <SelectItem value={color.code}>
+                          {colorMappings.map((color,index) => (
+                            <SelectItem key={index} value={color.code}>
                               <div className="flex gap-2">
                                 <div
                                   style={{

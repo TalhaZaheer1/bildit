@@ -47,7 +47,7 @@ const FunnelSettings = async ({
                 products={stripeProducts as Stripe.Product[]}
               />
             ) : (
-              <Link href={stripeOAuthLink}>'Connect your stripe account to sell products.'</Link>
+              <Link href={stripeOAuthLink}>Connect your stripe account to sell products.</Link>
             )}
           </>
         </CardContent>

@@ -2,8 +2,10 @@ import mongoose, { Document, Schema } from "mongoose";
 import { Role } from "@/lib/types";
 import { UserInterface } from "./User";
 import { SubAccountInterface } from "./SubAccount";
+import { InvitationInterface } from "./Invitation";
+import { SubscriptionInterface } from "./Subscription";
 
-export interface AgencyInterface extends Document<> {
+export interface AgencyInterface extends Document {
   connectAccountId?: string;
   customerId: string;
   name: string; // Required
@@ -24,9 +26,9 @@ export interface AgencyInterface extends Document<> {
     link:string,
     icon:string
   }[];
-  invitations?: mongoose.Schema.Types.ObjectId[] | invitationInterface[];
-  subscription?: mongoose.Schema.Types.ObjectId | subscriptionInterface[];
-  addons?: mongoose.Schema.Types.ObjectId[] | addonsInterface[];
+  invitations?: mongoose.Schema.Types.ObjectId[] | InvitationInterface[];
+  subscription?: mongoose.Schema.Types.ObjectId | SubscriptionInterface;
+  addons?: mongoose.Schema.Types.ObjectId[];
 }
 
 const agencySchema: Schema = new mongoose.Schema(

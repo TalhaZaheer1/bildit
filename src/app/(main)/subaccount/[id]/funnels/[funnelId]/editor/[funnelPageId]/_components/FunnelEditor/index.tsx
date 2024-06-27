@@ -36,7 +36,7 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
       })
     }
     fetchData()
-  }, [funnelPageId])
+  }, [funnelPageId,dispatch])
 
   const handleClick = () => {
     dispatch({

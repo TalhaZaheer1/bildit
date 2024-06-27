@@ -296,7 +296,7 @@ const UserDetails = ({ type, subAccounts, userData, id }: Props) => {
                   agency owners
                 </FormDescription>
                 <div className="flex flex-col gap-4">
-                  {subAccounts?.map((subAccount) => {
+                  {subAccounts?.map((subAccount,index) => {
                     const permissions =
                       userWithPermissions?.permissions as PermissionInterface[];
                       console.log(permissions)
@@ -306,7 +306,7 @@ const UserDetails = ({ type, subAccounts, userData, id }: Props) => {
                       return permSubAccount._id === subAccount._id;
                     });
                     return (
-                      <div className="flex justify-between items-center p-4 rounded-lg border">
+                      <div key={index} className="flex justify-between items-center p-4 rounded-lg border">
                         <p>{subAccount.name}</p>
                         <Switch
                           disabled={loadingPermission}

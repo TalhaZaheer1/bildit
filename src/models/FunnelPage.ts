@@ -9,8 +9,8 @@ export interface FunnelPageInterface extends Document {
     previewImage?: string;
     visits: number;
     content?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 }
 
 const funnelPageSchema: Schema = new mongoose.Schema({

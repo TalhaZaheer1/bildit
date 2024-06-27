@@ -15,8 +15,7 @@ type Props = {
     className:string
 }
 
-const CreateSubAccount = ({className,user,id}: Props) => {
-  if(!user) return
+const CreateSubAccount = ({className,user,id}: Props) => {  
   const { setOpen } = useModal()
     return (
     <Button

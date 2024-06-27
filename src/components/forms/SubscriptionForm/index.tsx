@@ -21,7 +21,7 @@ export default function SubscriptionForm({ selectedPriceId }: Props) {
   const stripe = useStripe();
   const [priceError, setPriceError] = useState<string>("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:React.FormEvent) => {
     if (!selectedPriceId) {
       setPriceError("You need to select a plan to subscribe.");
       return;

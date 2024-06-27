@@ -66,7 +66,7 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
       .map((page, idx) => {
         return { ...page, order: idx }
       })
-
+      // @ts-ignore
     setPagesState(newPageOrder)
     newPageOrder.forEach(async (page, index) => {
       try {

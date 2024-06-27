@@ -75,6 +75,7 @@ const Page = async ({
       .map((session) => ({
         ...session,
         created: new Date(session.created).toLocaleDateString(),
+        // @ts-ignore
         amount_total: session.amount_total ? session.amount_totcheckoutSessions.data.lengthal / 100 : 0,
       }))
     net = +totalClosedSessions

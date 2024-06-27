@@ -104,9 +104,11 @@ const SubaccountPageId = async ({ params, searchParams }: Props) => {
     subAccount:params.id
   }).populate("funnelPages")))
 
+  // @ts-ignore
   const funnelPerformanceMetrics = funnels.map((funnel) => ({
     ...funnel,
     totalFunnelVisits: funnel.funnelPages.reduce(
+  // @ts-ignore
       (total, page) => total + page.visits,
       0
     ),

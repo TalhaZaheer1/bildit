@@ -104,6 +104,7 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
   };
   const changeTagState = (tag: TagInterface) => {
     if (selectedTags.find((t) => t._id === tag._id)) return;
+    // @ts-ignore
     return (e) => {
       e.preventDefault();
       setSelectedTags((prev) => [...prev, tag]);
@@ -167,8 +168,8 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
                   selectedTags.length > 0 ? "border mb-2 border-input" : ""
                 } bg-background rounded-lg px-2`}
               >
-                {selectedTags?.map((tag: TagInterface) => (
-                  <div className="flex items-center my-2">
+                {selectedTags?.map((tag: TagInterface,index) => (
+                  <div key={index} className="flex items-center my-2">
                     <TagButton tag={tag} />
                     <X
                       size={15}
@@ -209,8 +210,8 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
                 <CommandList>
                   <CommandEmpty>No results found...</CommandEmpty>
                  {tags?.length > 0 ? <CommandGroup heading="Tags">
-                    {tags?.map((tag) => (
-                      <CommandItem className="aria-selected:bg-transparent flex justify-between">
+                    {tags?.map((tag,index) => (
+                      <CommandItem key={index} className="aria-selected:bg-transparent flex justify-between">
                         <TagButton tag={tag} onClick={changeTagState(tag)} />
                         <Trash size={15} />
                       </CommandItem>
@@ -241,7 +242,7 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
                       <SelectContent>
                         <SelectGroup>
                           {data?.users?.map((user: UserInterface) => (
-                            <SelectItem value={user._id as string}>
+                            <SelectItem key={user._id.toString()} value={user._id as string}>
                               <div className="flex items-center gap-x-2">
                                 <Avatar className="h-7 w-7">
                                   <AvatarImage src={user?.avatarUrl} />
@@ -275,7 +276,7 @@ const TicketForm = ({ ticketData, laneId, subAccountId, tags }: Props) => {
                         <SelectGroup>
                           <SelectLabel>choose a customer....</SelectLabel>
                           {data?.contacts?.map((contact: UserInterface) => (
-                            <SelectItem value={contact._id as string}>
+                            <SelectItem key={contact._id.toString()} value={contact._id as string}>
                               {contact.name}
                             </SelectItem>
                           ))}

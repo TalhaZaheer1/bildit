@@ -40,6 +40,7 @@ const SettingsTab = () => {
   const { state, dispatch } = useEditor();
   const selectedElement = state.editor.selectedElement;
   console.log(selectedElement)
+  // @ts-ignore
   const handleChangeProps = (e) => {
     const propName = e.target.id;
     const value = e.target.value;
@@ -61,6 +62,7 @@ const SettingsTab = () => {
     });
   };
 
+  // @ts-ignore
   const handleChangeStyle = (e) => {
     const propName = e.target.id;
     let value = e.target.value;

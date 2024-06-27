@@ -1,5 +1,6 @@
 import { stripe } from "@/lib/stripe";
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 export async function POST(req: Request) {
   const { connectedAccountId, prices, subAccountId } = await req.json();
@@ -22,11 +23,13 @@ export async function POST(req: Request) {
     !process.env.NEXT_PUBLIC_PLATFORM_AGENY_PERCENT
   ) {
     return NextResponse.json({ error: 'Fees do not exist' })  }
-  const subscriptionExists = prices.find((prices) => prices.recurring);
+  // @ts-ignore
+  const subscriptionExists = prices.find((price) => prices.recurring);
   try {
     const session = await stripe.checkout.sessions.create(
       {
-        line_items: prices.map((price) => ({
+  // @ts-ignore
+        line_items: prices.map(price => ({
           price: price.productId,
           quantity: 1,
         })),

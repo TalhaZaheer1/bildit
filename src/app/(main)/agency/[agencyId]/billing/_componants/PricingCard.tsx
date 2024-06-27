@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useModal } from "@/providers/ModalProvider";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Stripe from "stripe";
 
 type Props = {
@@ -47,11 +47,7 @@ const PricingCard = ({
   const { setOpen } = useModal();
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
-  useEffect(() => {
-    if(plan)
-      handleManagePlan()
-  },[plan])
-  const handleManagePlan = () => {
+  const handleManagePlan = useCallback(() => {
     setOpen(
       <CustomModal
         title="Pick your plan"
@@ -65,12 +61,16 @@ const PricingCard = ({
         />
       </CustomModal>,async () => ({
         plans:{
-            defaultPriceId:plan ? plan : "",
-            plans:prices
+          defaultPriceId:plan ? plan : "",
+          plans:prices
         }
       })
     );
-  };
+  },[plan]);
+  useEffect(() => {
+    if(plan)
+      handleManagePlan()
+  },[plan,handleManagePlan])
   return (
     <Card className="flex flex-col justify-between lg:w-1/2">
       <div>

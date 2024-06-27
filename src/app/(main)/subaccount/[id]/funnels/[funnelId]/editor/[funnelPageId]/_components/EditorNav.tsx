@@ -48,15 +48,17 @@ const EditorNav = ({ subAccountId, pageDetails, funnelId }: Props) => {
 
   const handleOnSave = async () => {
     try {
-    const response = await upsertFunnelPage(subAccountId,{
-        content:JSON.stringify(state.editor.elements)
-    },
-    funnelId,
-    pageDetails._id
-)
-toast("Success!", {
-    description: "Saved Page Updates",
-  });
+      const response = await upsertFunnelPage(
+        subAccountId,
+        {
+          content: JSON.stringify(state.editor.elements),
+        },
+        funnelId,
+        pageDetails._id
+      );
+      toast("Success!", {
+        description: "Saved Page Updates",
+      });
     } catch (err) {
       toast("Oppse!", {
         description: "Failed to save page updates",
@@ -88,12 +90,11 @@ toast("Success!", {
     }
   };
 
-
   const handlePreviewClick = () => {
-    dispatch({ type: 'TOGGLE_PREVIEW_MODE' })
-    dispatch({ type: 'TOGGLE_LIVE_MODE' })
-  }
-  
+    dispatch({ type: "TOGGLE_PREVIEW_MODE" });
+    dispatch({ type: "TOGGLE_LIVE_MODE" });
+  };
+
   const handleUndo = () => {
     dispatch({ type: "UNDO" });
   };
@@ -215,10 +216,11 @@ toast("Success!", {
               Publish
             </div>
             <span className="text-muted-foreground text-sm">
-            Last updated {pageDetails.updatedAt}
+              Last updated 
+              {pageDetails.updatedAt as string}
             </span>
           </div>
-              <Button onClick={handleOnSave}>Save</Button>
+          <Button onClick={handleOnSave}>Save</Button>
         </aside>
       </nav>
     </TooltipProvider>

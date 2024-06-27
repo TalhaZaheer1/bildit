@@ -18,8 +18,10 @@ const subscriptionCreated= async (
         const subscriptionData = {
             agency:agency._id,
             active:subscription.status === "active",
+      //@ts-ignore
             plan:subscription.plan.id,
             subscriptionId:subscription.id,
+      //@ts-ignore
             priceId:subscription.plan.id,
             currentPeriodEndDate:new Date(subscription.current_period_end*1000),
             customerId

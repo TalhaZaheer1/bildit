@@ -8,6 +8,7 @@ import { stripe } from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
 import agencyModel, { AgencyInterface } from "@/models/Agency";
 import dbConnect from "@/lib/db";
+import { SubscriptionInterface } from "@/models/Subscription";
 export default async function Home() {
   const authUser = await currentUser()
   const prices = await stripe.prices.list({
@@ -15,14 +16,14 @@ export default async function Home() {
     active:true
   })
   let agencyDetails:AgencyInterface | null;
-  console.log(authUser)
   if(authUser){
     await dbConnect()
     agencyDetails = await agencyModel.findOne({
       companyEmail:authUser.emailAddresses[0].emailAddress
     }).populate("subscription");
   }
-  console.log(agencyDetails)
+  // @ts-ignore
+  const subscription = agencyDetails?.subscription as SubscriptionInterface
   return (
     <>
     <section className="flex h-full w-full relative flex-col items-center justify-center md:pt-36">
@@ -51,13 +52,13 @@ export default async function Home() {
             <Card
               key={card.nickname}
               className={clsx('w-[300px] flex flex-col justify-between', {
-                'border-2 border-primary': agencyDetails ? card.id === agencyDetails?.subscription?.priceId : card.nickname === "Unlimited SaaS",
+                'border-2 border-primary': agencyDetails ? card.id === subscription?.priceId : card.nickname === "Unlimited SaaS",
               })}
             >
               <CardHeader>
                 <CardTitle
                   className={clsx('', {
-                    'text-muted-foreground': agencyDetails ? card.id !== agencyDetails?.subscription?.priceId : card.nickname !== "Unlimited SaaS",
+                    'text-muted-foreground': agencyDetails ? card.id !== subscription?.priceId : card.nickname !== "Unlimited SaaS",
                   })}
                 >
                   {card.nickname}
@@ -97,7 +98,7 @@ export default async function Home() {
                     'w-full text-center bg-primary p-2 rounded-md',
                     {
                       '!bg-muted-foreground':
-                      agencyDetails ? card.id !== agencyDetails?.subscription?.priceId : card.nickname !== "Unlimited SaaS",
+                      agencyDetails ? card.id !== subscription?.priceId : card.nickname !== "Unlimited SaaS",
                     }
                   )}
                 >
@@ -110,7 +111,7 @@ export default async function Home() {
             <CardHeader>
               <CardTitle
                 className={clsx({
-                  'text-muted-foreground': agencyDetails ? !agencyDetails?.subscription?.priceId : true,
+                  'text-muted-foreground': authUser ? !subscription?.priceId : true,
                 })}
               >
                 {pricingCards[0].title}

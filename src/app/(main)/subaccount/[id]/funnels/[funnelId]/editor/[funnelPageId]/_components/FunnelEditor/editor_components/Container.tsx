@@ -254,7 +254,7 @@ const Container = ({ element }: Props) => {
         {name}
       </Badge>
       {Array.isArray(elementContent) &&
-        elementContent.map((element) => <Recursive element={element} />)}
+        elementContent.map((element) => <Recursive key={element.id} element={element} />)}
       {state.editor.selectedElement.id === id &&
         !state.editor.liveMode &&
         state.editor.selectedElement.type !== '__body' && (

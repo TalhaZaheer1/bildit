@@ -29,7 +29,7 @@ const Main = ({id,funnelId,pageDetails,funnelPageId}: Props) => {
       <FunnelEditor funnelPageId={funnelPageId} />
     </EditorContextProvider>
     </div>
-
+  // @ts-ignore
     return createPortal(child,body)
     
   

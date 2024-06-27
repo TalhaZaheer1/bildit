@@ -74,8 +74,8 @@ export const coulumnDef: ColumnDef<UserInterfaceForTable>[] = [
         <div>
           <div>
             {truePermissions.length ? (
-              truePermissions.map((p) => (
-                <Badge>Sub Account - {p?.subAccount.name}</Badge>
+              truePermissions.map((p,index) => (
+                <Badge key={index}>Sub Account - {p?.subAccount.name}</Badge>
               ))
             ) : (
               <div className="text-muted-foreground">No Access yet</div>

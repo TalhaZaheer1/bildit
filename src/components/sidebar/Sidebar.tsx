@@ -12,6 +12,7 @@ const Sidebar = async ({ id, type }: Props) => {
   const details =
     type === "agency"
       ? user.agency
+      //@ts-ignore
       : user.agency.subAccounts.find((subAccount) => subAccount._id === id);
   let logo;
   if (!user.agency.whiteLabel) {
@@ -23,8 +24,10 @@ const Sidebar = async ({ id, type }: Props) => {
   } else {
     logo = details.agencyLogo;
   }
+      //@ts-ignore
   const subAccounts = user.agency.subAccounts.filter((subAccount) =>
     user.permissions.find(
+      //@ts-ignore
       (permission) => permission.subAccount === subAccount._id
     )
   );

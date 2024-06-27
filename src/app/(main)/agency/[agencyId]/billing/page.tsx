@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import clsx from "clsx";
+import Stripe from "stripe";
 
 type Props = {
   params: { agencyId: string };
@@ -85,14 +86,17 @@ const Billing = async ({ params }: Props) => {
           duration={"/ month"}
           planExists={isActive}
         />
-        {allAddOns.data?.map((addon) => (
+        {allAddOns.data?.map((addon,index) => {
+          const price = addon.default_price as Stripe.Price
+          return(
           <PricingCard
+          key={index}
           agencyId={params.agencyId}
             planExists={isActive}
             title={addon.name}
             description={addon.description || ""}
             prices={allPrices.data}
-            amount={ addon.default_price?.unit_amount ? `$${addon.default_price?.unit_amount / 100}` : "$0"}
+            amount={ price?.unit_amount ? `$${price?.unit_amount / 100}` : "$0"}
             buttonText="Subscribe"
             duration="/ month"
             features={[]}
@@ -100,7 +104,7 @@ const Billing = async ({ params }: Props) => {
             highlightTitle="Get support now!"
             highlightDescription="Get priority support and skip the long long with the click of a button."
           />
-        ))}
+        )})}
       </div>
       <Table className="bg-card border-[1px] border-border rounded-md">
         <TableHeader className="rounded-md">

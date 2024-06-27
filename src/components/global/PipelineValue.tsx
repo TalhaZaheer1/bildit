@@ -39,7 +39,9 @@ const PipelineValue = ({ subAccountId }: Props) => {
         pipelines
           .find((pipeline) => pipeline.id === selectedPipelineId)
           ?.lanes?.reduce((totalLanes, lane, currentLaneIndex, array) => {
+      //@ts-ignore
             const laneTicketsTotal = lane.tickets.reduce(
+      //@ts-ignore
               (totalTickets, ticket) => totalTickets + Number(ticket?.value),
               0
             )
@@ -102,8 +104,8 @@ const PipelineValue = ({ subAccountId }: Props) => {
               <SelectLabel>Pipelines</SelectLabel>
               {pipelines.map((pipeline) => (
                 <SelectItem
-                  value={pipeline.id}
-                  key={pipeline.id}
+                  value={pipeline._id}
+                  key={pipeline._id}
                 >
                   {pipeline.name}
                 </SelectItem>

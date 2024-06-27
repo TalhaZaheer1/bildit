@@ -40,7 +40,7 @@ type Props = {
   snapshot:DraggableStateSnapshot
 };
 
-const TicketUnit = forwardRef(({ provided,snapshot, ticketDetails, subAccountId, laneId, tags}: Props) => {
+const TicketUnit = ({ provided,snapshot, ticketDetails, subAccountId, laneId, tags}: Props) => {
   const { setOpen } = useModal();
   const { toast } = useToast()
   const router = useRouter()
@@ -141,8 +141,8 @@ const TicketUnit = forwardRef(({ provided,snapshot, ticketDetails, subAccountId,
       <CardContent className="text-muted-foreground text-[.78rem] font-semibold flex pb-0 flex-col gap-2">
         <p>{ticketDetails.createdAt.toString().slice(0, 10)}</p>
         <div className="flex gap-2 w-full flex-wrap">
-          {ticketDetails.tags.map((tag) => (
-            <TagButton className="w-fit" tag={tag} />
+          {ticketDetails.tags.map((tag,index) => (
+            <TagButton key={index} className="w-fit" tag={tag} />
           ))}
         </div>
         <p>{ticketDetails.description}</p>
@@ -179,6 +179,6 @@ const TicketUnit = forwardRef(({ provided,snapshot, ticketDetails, subAccountId,
   );
   if(!usePortal) return Child
   return createPortal(Child,document.body)
-});
+};
 
 export default TicketUnit;

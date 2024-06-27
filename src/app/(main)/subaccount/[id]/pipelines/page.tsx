@@ -12,6 +12,7 @@ const Pipeline = async ({ params }: Props) => {
     .lean();
   if (firstPipeLineExists)
     redirect(
+  // @ts-ignore
       `/subaccount/${params.id}/pipelines/${firstPipeLineExists._id.toString()}`
     );
    const firstPipeline = await pipelineModel.create({

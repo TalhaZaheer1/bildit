@@ -20,6 +20,7 @@ const layout = async ({params,children}: Props) => {
     await dbConnect()
     let authUser = {}
     try{
+  // @ts-ignore
         authUser = await currentUser()
     }catch(err){
         console.log(err)

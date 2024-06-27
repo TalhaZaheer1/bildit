@@ -59,8 +59,8 @@ const Contacts = async ({ params }: Props) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allContacts?.map((contact) => (
-            <TableRow>
+          {allContacts?.map((contact,index) => (
+            <TableRow key={index}>
               <TableCell>
                 <Avatar>
                     <AvatarImage alt="profile" />

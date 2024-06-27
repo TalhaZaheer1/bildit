@@ -32,6 +32,7 @@ import {
 import { useRouter } from "next/navigation";
 import { CopyPlusIcon, Trash } from "lucide-react";
 import { FunnelPageInterface } from "@/models/FunnelPage";
+import { FunnelInterface } from "@/models/Funnel";
 
 
 const FunnelPageSchema = z.object({
@@ -173,10 +174,10 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                   disabled={form.formState.isSubmitting}
                   type="button"
                   onClick={async () => {
-                    const response = await deleteFunnelPage(defaultData.id);
+                    const response = await deleteFunnelPage(defaultData._id,funnelId);
                     await saveActivityLogsNotifications({
                       agencyId: undefined,
-                      description: `Deleted a funnel page | ${response?.name}`,
+                      description: `Deleted a funnel page `,
                       subAccountId: subaccountId,
                     });
                     router.refresh();
@@ -194,7 +195,7 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                   onClick={async () => {
                     const response = await getFunnels(subaccountId);
                     const lastFunnelPage = response.find(
-                      (funnel) => funnel.id === funnelId
+                      (funnel:FunnelInterface) => funnel._id === funnelId
                     )?.FunnelPages.length;
 
                     await upsertFunnelPage(

@@ -33,6 +33,7 @@ async function createTeamUser(user: any) {
       { _id: user.agency },
       { $push: { users: newUser._id } }
     );
+      //@ts-ignore
     await clerkClient.users.updateUserMetadata(authUser?.id, {
       privateMetadata: {
         role: user.role || "SUBACCOUNT_USER",
