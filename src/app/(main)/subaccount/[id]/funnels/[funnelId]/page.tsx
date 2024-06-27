@@ -17,7 +17,6 @@ const Funnel = async ({params}: Props) => {
     const funnel = await getFunnel(funnelId)
     if(!funnel)
         redirect(`/subaccount/${id}/funnels`);
-    console.log(funnel)
   return (
     <section>
         <Link

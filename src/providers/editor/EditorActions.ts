@@ -136,7 +136,6 @@ export type EditorAction =
           };
         }
         case "CHANGE_SELECTED_ELEMENT":
-          console.log("changed",action)
           return {
             ...state,
             editor: {

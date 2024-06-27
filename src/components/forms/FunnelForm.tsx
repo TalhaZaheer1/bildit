@@ -76,7 +76,7 @@ const FunnelForm: React.FC<CreateFunnelProps> = ({
     const response = await upsertFunnel(
       subAccountId,
       { ...values, liveProducts: defaultData?.liveProducts || "[]" },
-      defaultData?.id || new mongoose.Types.ObjectId()
+      defaultData?._id || new mongoose.Types.ObjectId()
     );
     await saveActivityLogsNotifications({
       agencyId: undefined,

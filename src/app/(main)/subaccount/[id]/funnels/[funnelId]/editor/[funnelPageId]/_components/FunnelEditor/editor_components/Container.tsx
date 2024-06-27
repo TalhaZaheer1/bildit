@@ -26,7 +26,6 @@ const Container = ({ element }: Props) => {
     const { id, styles, type, content, name } = element;
   const { state, dispatch } = useEditor();
   const elementContent = content as Element[];
-
   const handleOnDrop = (e: React.DragEvent) => {
     e.stopPropagation();
     const componant = JSON.parse(e.dataTransfer.getData("component"));

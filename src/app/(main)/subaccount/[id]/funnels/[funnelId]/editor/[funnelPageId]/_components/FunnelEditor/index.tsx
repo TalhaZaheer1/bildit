@@ -26,7 +26,7 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
     const fetchData = async () => {
       const response = await getFunnelPageDetails(funnelPageId)
       if (!response) return
-
+      
       dispatch({
         type: 'LOAD_DATA',
         payload: {

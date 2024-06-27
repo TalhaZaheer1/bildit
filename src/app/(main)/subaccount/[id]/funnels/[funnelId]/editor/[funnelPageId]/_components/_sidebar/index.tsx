@@ -33,7 +33,7 @@ const EditorSideBar = (props: Props) => {
           showX={false}
           side="right"
           className={clsx(
-            "mt-[96px] w-80 z-[40] shadow-none p-0 mr-16 h-[100vh] bg-background h-full transition-all overflow-hidden ",
+            "mt-[96px] w-80 z-[40] shadow-none p-0 mr-16 h-[100vh] bg-background transition-all overflow-hidden ",
             { hidden: state.editor.previewMode }
           )}
         >

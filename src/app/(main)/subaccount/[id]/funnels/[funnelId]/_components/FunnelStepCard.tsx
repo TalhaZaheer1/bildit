@@ -15,7 +15,6 @@ type Props = {
 
 const FunnelStepCard = ({funnelPage,index,key,activePage}: Props) => {
     let portal = document.querySelector("body")
-    console.log(funnelPage)
     return (
       <Draggable
         key={key}

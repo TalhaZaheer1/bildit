@@ -81,6 +81,7 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
         subaccountId,
         {
           ...values,
+          ...defaultData,
           order: defaultData?.order || order,
           pathName: values.pathName || "",
         },

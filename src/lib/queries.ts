@@ -150,7 +150,6 @@ async function saveActivityLogsNotifications({
 
 async function verifyAndAcceptInvitation() {
   const authUser = await currentUser();
-  console.log(authUser)
   if (!authUser) return redirect("/sign-in");
   const invitation = await invitationModel.findOne({
     email: authUser.emailAddresses[0].emailAddress,
@@ -1046,12 +1045,33 @@ const getFunnelPageDetails = async (funnelPageId:string) => {
 }
 
 
-export const getSubaccountDetails = async (subAccountId: string) => {
+const getSubaccountDetails = async (subAccountId: string) => {
   const response = await subAccountModel.findById(subAccountId).lean()
   return JSON.parse(JSON.stringify(response))
 }
 
+const getDomainDetails = async (domainName:string) => {
+  try{
+    const funnel = await funnelModel.findOne({
+      subDomainName:domainName
+    }).populate("funnelPages")
+    return funnel
+  }catch(err){
+    console.log(err)
+  }
+}
 
+const getPipelines = async (subAccountId: string) => {
+  const response = await pipelineModel.find({
+    subAccount:subAccountId
+  }).populate({
+    path:"lanes",
+    populate:{
+      path:"tickets"
+    }
+  })
+  return JSON.parse(JSON.stringify(response));
+}
 
 export {
   verifyAndAcceptInvitation,
@@ -1091,6 +1111,9 @@ export {
   updateFunnelProducts,
   upsertFunnelPage,
   deleteFunnelPage,
-  getFunnelPageDetails
+  getFunnelPageDetails,
+  getSubaccountDetails,
+  getDomainDetails,
+  getPipelines
 };
   

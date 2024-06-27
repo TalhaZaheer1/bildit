@@ -95,7 +95,6 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
       description: 'Saved page order',
     })
   }
-  console.log(pagesState)
   return (
     <AlertDialog>
       <div className="flex border-[1px] lg:!flex-row flex-col ">
