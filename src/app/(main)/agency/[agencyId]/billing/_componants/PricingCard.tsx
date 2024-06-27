@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/card";
 import { useModal } from "@/providers/ModalProvider";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import Stripe from "stripe";
 
 type Props = {
+  agencyId:string
   title: string;
   prices: Stripe.Response<Stripe.ApiList<Stripe.Price>>["data"];
   amount: string;
@@ -30,6 +31,7 @@ type Props = {
 };
 
 const PricingCard = ({
+  agencyId,
   title,
   prices,
   amount,
@@ -45,7 +47,10 @@ const PricingCard = ({
   const { setOpen } = useModal();
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
-
+  useEffect(() => {
+    if(plan)
+      handleManagePlan()
+  },[plan])
   const handleManagePlan = () => {
     setOpen(
       <CustomModal
@@ -56,6 +61,7 @@ const PricingCard = ({
         <SubscriptionFormWrapper
           customerId={customerId}
           planExists={planExists}
+          agencyId={agencyId}
         />
       </CustomModal>,async () => ({
         plans:{

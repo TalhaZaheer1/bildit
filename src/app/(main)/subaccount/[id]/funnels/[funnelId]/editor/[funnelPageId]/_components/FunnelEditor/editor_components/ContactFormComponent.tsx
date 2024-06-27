@@ -8,6 +8,7 @@ import {
 saveActivityLogsNotifications,
   upsertContact,
 } from '@/lib/queries'
+import { FunnelPageInterface } from '@/models/FunnelPage'
 import { Element, useEditor } from '@/providers/editor/EditorProvider'
 
 import clsx from 'clsx'
@@ -47,7 +48,7 @@ const ContactFormComponent = (props: Props) => {
     if (!funnelPages || !pageDetails) return
     if (funnelPages.funnelPages.length > pageDetails.order + 1) {
       const nextPage = funnelPages.funnelPages.find(
-        (page) => page.order === pageDetails.order + 1
+        (page:FunnelPageInterface) => page.order === pageDetails.order + 1
       )
       if (!nextPage) return
       console.log("NEXTPAGECOMP")

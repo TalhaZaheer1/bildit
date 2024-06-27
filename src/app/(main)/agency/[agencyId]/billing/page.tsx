@@ -61,6 +61,7 @@ const Billing = async ({ params }: Props) => {
       <h2 className="text-2xl p-4">Current Plan</h2>
       <div className="flex flex-col lg:!flex-row justify-between gap-8">
         <PricingCard
+          agencyId={params.agencyId}
           title={
             isActive ? currentSubscriptionPlan?.title || "Starter" : "Starter"
           }
@@ -86,6 +87,7 @@ const Billing = async ({ params }: Props) => {
         />
         {allAddOns.data?.map((addon) => (
           <PricingCard
+          agencyId={params.agencyId}
             planExists={isActive}
             title={addon.name}
             description={addon.description || ""}

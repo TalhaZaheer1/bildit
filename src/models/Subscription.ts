@@ -12,7 +12,6 @@ const subscriptionSchema: Schema = new mongoose.Schema({
         type:String,
         enum:["price_1PSrbsAMIkPxnOu6bI3BJALS","price_1PSrbsAMIkPxnOu6RgTsiPtF"]
     },
-    price:String,
     active:{
         type:Boolean,
         required:true,

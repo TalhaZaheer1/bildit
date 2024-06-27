@@ -21,7 +21,6 @@ export async function POST(req: Request) {
         }
       );
     const subscriptionExists = await subscriptionModel.findOne({ customerId:customerId });
-    console.log(subscriptionExists)
     if (!subscriptionExists && subscriptionExists?.active !== "active") {
       console.log("subscription CREATED!!!!!!!!!!!!!!!!!!!!!!!!!")
       const newSubscription = await stripe.subscriptions.create({
@@ -50,7 +49,6 @@ export async function POST(req: Request) {
         }
       );
     } else {
-      console.log("SUB UPDATEDDDDD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       const stripeSubscriptionData = await stripe.subscriptions.retrieve(
         subscriptionExists.subscriptionId.toString()
       );
@@ -69,6 +67,7 @@ export async function POST(req: Request) {
           expand: ["latest_invoice.payment_intent"],
         }
       );
+      
       return NextResponse.json(
         {
             subscriptionId:subscription.id,

@@ -44,10 +44,10 @@ export async function POST(req: Request) {
         !subscription.metadata.connectAccountPayments &&
         !subscription.metadata.connectAccountSubscriptions
       ) {
+        console.log("WEBHOOK CHALA")
         switch (event.type) {
           case 'customer.subscription.created':
           case 'customer.subscription.updated': {
-            console.log(subscription)
             if (subscription.status === 'active' ) {
               await subscriptionCreated(
                 subscription,

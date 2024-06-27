@@ -42,7 +42,19 @@ const LinkComponent = (props: Props) => {
 
   return (
     <div
-      style={styles}
+      style={{...styles,
+        width:isNaN(Number(styles.width)) ?  styles.width  : !styles.width ? "100%" : styles.width + "px",
+        height:isNaN(Number(styles.height)) ?  styles.height  : !styles.height ? "fit-content" : styles.height + "px", 
+        paddingTop:isNaN(Number(styles.paddingTop)) ?  styles.paddingTop  : !styles.paddingTop ? "2px" : styles.paddingTop + "px",
+        paddingBottom:isNaN(Number(styles.paddingBottom)) ?  styles.paddingBottom  : !styles.paddingBottom ? "2px" : styles.paddingBottom + "px", 
+        paddingLeft:isNaN(Number(styles.paddingLeft)) ?  styles.paddingLeft  : !styles.paddingLeft ? "2px" : styles.paddingLeft + "px", 
+        paddingRight:isNaN(Number(styles.paddingRight)) ?  styles.paddingRight  : !styles.paddingRight ? "2px" : styles.paddingRight + "px", 
+        marginTop:isNaN(Number(styles.marginTop)) ?  styles.marginTop  : !styles.marginTop ? "5px" : styles.marginTop + "px", 
+        marginBottom:isNaN(Number(styles.marginBottom)) ?  styles.marginBottom  : !styles.marginBottom ? "5px" : styles.marginBottom + "px", 
+        marginLeft:isNaN(Number(styles.marginLeft)) ?  styles.marginLeft  : !styles.marginLeft ? "5px" : styles.marginLeft + "px", 
+        marginRight:isNaN(Number(styles.marginRight)) ?  styles.marginRight  : !styles.marginRight ? "5px" : styles.marginRight + "px", 
+
+      }}
       draggable
       onDragStart={(e) => handleDragStart(e, 'text')}
       onClick={handleOnClickBody}

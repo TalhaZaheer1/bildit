@@ -23,7 +23,7 @@ async function Agency({
     if (teamUser.role === "AGENCY_OWNER" || teamUser.role === "AGENCY_ADMIN") {
       if (searchParams.plan) {
         return redirect(
-          `/agency/${teamUser.agency._id}?plan=${searchParams.plan}`
+          `/agency/${teamUser.agency._id}/billing?plan=${searchParams.plan}`
         );
       }
       if (searchParams.state) {

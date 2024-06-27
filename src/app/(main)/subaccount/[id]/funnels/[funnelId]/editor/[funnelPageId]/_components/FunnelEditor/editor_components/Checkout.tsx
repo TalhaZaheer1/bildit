@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from '@/components/ui/use-toast'
 import { getFunnel, getSubaccountDetails } from '@/lib/queries'
 import { getStripe } from '@/lib/stripe/stripeClient'
+import { FunnelPageInterface } from '@/models/FunnelPage'
 import { Element, useEditor } from '@/providers/editor/EditorProvider'
 import {
   EmbeddedCheckout,
@@ -110,7 +111,7 @@ const Checkout = (props: Props) => {
     if (funnelPages.FunnelPages.length > pageDetails.order + 1) {
       console.log(funnelPages.FunnelPages.length, pageDetails.order + 1)
       const nextPage = funnelPages.FunnelPages.find(
-        (page) => page.order === pageDetails.order + 1
+        (page:FunnelPageInterface) => page.order === pageDetails.order + 1
       )
       if (!nextPage) return
       router.replace(

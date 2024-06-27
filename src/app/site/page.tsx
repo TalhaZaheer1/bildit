@@ -1,14 +1,28 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { pricingCards } from "@/lib/constants";
 import { Check } from "lucide-react";
 import { Card,CardHeader,CardTitle,CardContent,CardDescription,CardFooter } from "@/components/ui/card";
 import clsx from 'clsx';
-export default function Home() {
-  const [user, setUser] = useState({ name: "Jon" });
-
+import { stripe } from "@/lib/stripe";
+import { currentUser } from "@clerk/nextjs/server";
+import agencyModel, { AgencyInterface } from "@/models/Agency";
+import dbConnect from "@/lib/db";
+export default async function Home() {
+  const authUser = await currentUser()
+  const prices = await stripe.prices.list({
+    product:process.env.NEXT_BILDIT_PRODUCT_ID,
+    active:true
+  })
+  let agencyDetails:AgencyInterface | null;
+  console.log(authUser)
+  if(authUser){
+    await dbConnect()
+    agencyDetails = await agencyModel.findOne({
+      companyEmail:authUser.emailAddresses[0].emailAddress
+    }).populate("subscription");
+  }
+  console.log(agencyDetails)
   return (
     <>
     <section className="flex h-full w-full relative flex-col items-center justify-center md:pt-36">
@@ -32,45 +46,108 @@ export default function Home() {
           ready to commit you can get started for free.
       </p>
       <div className="flex justify-center gap-4 flex-wrap mt-6">
-        {pricingCards.map(card => (
-          <Card key={card.title}
-            className={clsx("w-[300px] flex flex-col justify-between", {
-              "border-2 border-primary" : card.title === "Unlimited Saas"
-            })}
-          >
+      {prices.data.map((card) => (
+            //WIP: Wire up free product from stripe
+            <Card
+              key={card.nickname}
+              className={clsx('w-[300px] flex flex-col justify-between', {
+                'border-2 border-primary': agencyDetails ? card.id === agencyDetails?.subscription?.priceId : card.nickname === "Unlimited SaaS",
+              })}
+            >
+              <CardHeader>
+                <CardTitle
+                  className={clsx('', {
+                    'text-muted-foreground': agencyDetails ? card.id !== agencyDetails?.subscription?.priceId : card.nickname !== "Unlimited SaaS",
+                  })}
+                >
+                  {card.nickname}
+                </CardTitle>
+                <CardDescription>
+                  {
+                    pricingCards.find((c) => c.title === card.nickname)
+                      ?.description
+                  }
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <span className="text-4xl font-bold">
+                  {card.unit_amount && card.unit_amount / 100}
+                </span>
+                <span className="text-muted-foreground">
+                  <span>/ {card.recurring?.interval}</span>
+                </span>
+              </CardContent>
+              <CardFooter className="flex flex-col items-start gap-4">
+                <div>
+                  {pricingCards
+                    .find((c) => c.title === card.nickname)
+                    ?.features.map((feature) => (
+                      <div
+                        key={feature}
+                        className="flex gap-2"
+                      >
+                        <Check />
+                        <p>{feature}</p>
+                      </div>
+                    ))}
+                </div>
+                <Link
+                  href={`/agency?plan=${card.id}`}
+                  className={clsx(
+                    'w-full text-center bg-primary p-2 rounded-md',
+                    {
+                      '!bg-muted-foreground':
+                      agencyDetails ? card.id !== agencyDetails?.subscription?.priceId : card.nickname !== "Unlimited SaaS",
+                    }
+                  )}
+                >
+                  Get Started
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+           <Card className={clsx('w-[300px] flex flex-col justify-between')}>
             <CardHeader>
-              <CardTitle className={clsx("",{
-                "text-muted-foreground": card.title !== "Unlimited Saas"
-              })}>
-                {card.title}
+              <CardTitle
+                className={clsx({
+                  'text-muted-foreground': agencyDetails ? !agencyDetails?.subscription?.priceId : true,
+                })}
+              >
+                {pricingCards[0].title}
               </CardTitle>
-              <CardDescription>
-                {card.description}
-              </CardDescription>
+              <CardDescription>{pricingCards[0].description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <span className="text-4xl font-bold">{card.price}</span>
-              <span className="text-muted-foreground">/m</span>
+              <span className="text-4xl font-bold">$0</span>
+              <span>/ month</span>
             </CardContent>
-            <CardFooter className="flex flex-col gap-4">
+            <CardFooter className="flex flex-col  items-start gap-4 ">
               <div>
-                {card.features.map(feature => (
-                  <div
-                  className="flex gap-2"
-                  key={feature}>
-                    <Check className="text-muted-foreground" />
-                    <p>{feature}</p>
-                  </div>
-                ))}
+                {pricingCards
+                  .find((c) => c.title === 'Starter')
+                  ?.features.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex gap-2"
+                    >
+                      <Check />
+                      <p>{feature}</p>
+                    </div>
+                  ))}
               </div>
               <Link
-              className={clsx("bg-primary p-2 w-full text-center rounded-md",{
-                "!bg-muted-foreground":card.title == "Unlimited Saas"
-              })}
-              href={`/agency?plan=${card.priceId}`}>Get Started</Link>
+                href="/agency"
+                className={clsx(
+                  'w-full text-center bg-primary p-2 rounded-md',
+                  {
+                    '!bg-muted-foreground': true,
+                  }
+                )}
+              >
+                Get Started
+              </Link>
             </CardFooter>
           </Card>
-        ))}
       </div>
     </section>
     </>

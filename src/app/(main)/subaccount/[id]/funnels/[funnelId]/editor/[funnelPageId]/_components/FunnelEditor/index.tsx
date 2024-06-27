@@ -50,14 +50,15 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
     dispatch({ type: 'TOGGLE_LIVE_MODE' })
   }
   return (
+    <div className='mr-[385px] h-full overflow-y-scroll'>
     <div
       className={clsx(
-        'use-automation-zoom-in h-full overflow-y-scroll pr-[385px] bg-background transition-all rounded-md',
+        'use-automation-zoom-in h-full bg-background transition-all rounded-md',
         {
           '!p-0 !mr-0':
             state.editor.previewMode === true || state.editor.liveMode === true,
-          '!w-[850px] !pr-0': state.editor.device === 'Tablet',
-          '!w-[420px] !pr-0': state.editor.device === 'Mobile',
+          '!w-[850px] !pr-0 mx-auto': state.editor.device === 'Tablet',
+          '!w-[420px] !pr-0 mx-auto': state.editor.device === 'Mobile',
           'w-full': state.editor.device === 'Desktop',
         }
       )}
@@ -80,6 +81,7 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
             element={childElement}
           />
         ))}
+    </div>
     </div>
   )
 }

@@ -357,6 +357,15 @@ const SettingsTab = () => {
                   },
                 })
               }}
+              value={[
+                typeof state.editor.selectedElement.styles?.opacity === 'number'
+                  ? state.editor.selectedElement.styles?.opacity
+                  : parseFloat(
+                      (
+                        state.editor.selectedElement.styles?.opacity || '0'
+                      ).replace('%', '')
+                    ) || 0,
+              ]}
               defaultValue={[
                 typeof state.editor.selectedElement.styles?.opacity === 'number'
                   ? state.editor.selectedElement.styles?.opacity
@@ -394,6 +403,14 @@ const SettingsTab = () => {
                   },
                 })
               }}
+              value={[typeof state.editor.selectedElement.styles?.borderRadius ===
+                'number'
+                  ? state.editor.selectedElement.styles?.borderRadius
+                  : parseFloat(
+                      (
+                        state.editor.selectedElement.styles?.borderRadius || '0'
+                      ).replace('%', '')
+                    ) || 0]}
               defaultValue={[
                 typeof state.editor.selectedElement.styles?.borderRadius ===
                 'number'

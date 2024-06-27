@@ -14,7 +14,7 @@ type Props = {
 }
 
 const TwoColumns = (props: Props) => {
-  const { id, content, type } = props.element
+  const { id, content, type, styles } = props.element
   const { dispatch, state } = useEditor()
 
   const handleOnDrop = (e: React.DragEvent) => {
@@ -184,7 +184,20 @@ const TwoColumns = (props: Props) => {
 
   return (
     <div
-      style={props.element.styles}
+      style={{
+        ...styles,
+        width:isNaN(Number(styles.width)) ?  styles.width  : !styles.width ? "100%" : styles.width + "px",
+        height:isNaN(Number(styles.height)) ?  styles.height  : !styles.height ? "fit-content" : styles.height + "px", 
+        paddingTop:isNaN(Number(styles.paddingTop)) ?  styles.paddingTop  : !styles.paddingTop ? "16px" : styles.paddingTop + "px",
+        paddingBottom:isNaN(Number(styles.paddingBottom)) ?  styles.paddingBottom  : !styles.paddingBottom ? "16px" : styles.paddingBottom + "px", 
+        paddingLeft:isNaN(Number(styles.paddingLeft)) ?  styles.paddingLeft  : !styles.paddingLeft ? "16px" : styles.paddingLeft + "px", 
+        paddingRight:isNaN(Number(styles.paddingRight)) ?  styles.paddingRight  : !styles.paddingRight ? "16px" : styles.paddingRight + "px", 
+        marginTop:isNaN(Number(styles.marginTop)) ?  styles.marginTop  : !styles.marginTop ? "0" : styles.marginTop + "px", 
+        marginBottom:isNaN(Number(styles.marginBottom)) ?  styles.marginBottom  : !styles.marginBottom ? "0" : styles.marginBottom + "px", 
+        marginLeft:isNaN(Number(styles.marginLeft)) ?  styles.marginLeft  : !styles.marginLeft ? "0" : styles.marginLeft + "px", 
+        marginRight:isNaN(Number(styles.marginRight)) ?  styles.marginRight  : !styles.marginRight ? "0" : styles.marginRight + "px", 
+
+    }}
       className={clsx('relative p-4 transition-all', {
         'h-fit': type === 'container',
         'h-full': type === '__body',

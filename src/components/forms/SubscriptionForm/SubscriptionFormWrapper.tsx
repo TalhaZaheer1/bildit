@@ -1,8 +1,8 @@
+//this is a client componant because one of parents is a client componant which is ModalProvider.tsx 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { pricingCards } from "@/lib/constants";
 import { useModal } from "@/providers/ModalProvider";
-import { Plane } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
@@ -14,11 +14,12 @@ import clsx from "clsx";
 type Props = {
   customerId: string;
   planExists: boolean;
+  agencyId:string;
 };
 
 const stripePromise = getStripe();
 
-const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
+const SubscriptionFormWrapper = ({ customerId, planExists,agencyId }: Props) => {
   const { setClose, data } = useModal();
   const [selectedPriceId, setSelectedPriceId] = useState(
     data?.plans?.defaultPriceId || ""
@@ -57,7 +58,6 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
           }),
         });
         const subResponse = await res.json();
-        console.log(subResponse)
         if (subResponse)
           setSubscription({
             subscriptionId: subResponse.subscriptionId,
@@ -69,7 +69,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
             description: "Subscription updated successfully",
           });
           setClose();
-          router.refresh();
+          router.push(`/agency/${agencyId}/billing`);
         }
       } catch (err) {
         toast({

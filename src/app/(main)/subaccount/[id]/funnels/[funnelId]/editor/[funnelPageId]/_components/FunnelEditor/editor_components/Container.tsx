@@ -187,7 +187,7 @@ const Container = ({ element }: Props) => {
   };
 
 
-  const handleDeleteElement = (e) => {
+  const handleDeleteElement = (e:React.MouseEvent) => {
     e.stopPropagation()
     dispatch({
       type: "DELETE_ELEMENT",
