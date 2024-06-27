@@ -181,10 +181,12 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
                       <div className="cursor-pointer group-hover:opacity-30 w-full">
                         <FunnelPagePlaceholder />
                       </div>
+                      <div className='w-[317px] h-[178px] top-0 left-0 absolute flex'>
                       <LucideEdit
                         size={50}
-                        className="!text-muted-foreground absolute top-1/2 left-1/2 opacity-0 transofrm -translate-x-1/2 -translate-y-1/2 group-hover:opacity-100 transition-all duration-100"
+                        className="!text-muted-foreground opacity-0 m-auto transofrm group-hover:opacity-100 transition-all duration-100"
                       />
+                      </div>
                     </Link>
 
                     <Link

@@ -8,6 +8,7 @@ import { useEditor } from "@/providers/editor/EditorProvider";
 import SettingsTab from "./tabs/SettingsTab";
 import MediaBucketTab from "./tabs/MediaTab";
 import ComponentsTab from "./tabs/componants-tab";
+import LayersTab from "./tabs/Layers/LayersTab";
 
 type Props = {
   subAccountId:string
@@ -58,11 +59,18 @@ const EditorSideBar = (props: Props) => {
               <MediaBucketTab subAccountId={props.subAccountId} />
             </TabsContent>
             <TabsContent value="Components">
-              <SheetHeader>
+              <SheetHeader className="text-left p-6">
               <SheetTitle>Components</SheetTitle>
               <SheetDescription>Add more components</SheetDescription>
               </SheetHeader>
               <ComponentsTab />
+            </TabsContent>
+            <TabsContent value="Layers">
+              <SheetHeader className="text-left p-6">
+              <SheetTitle>Layers</SheetTitle>
+              <SheetDescription>Manage your componants tree structure</SheetDescription>
+              </SheetHeader>
+              <LayersTab />
             </TabsContent>
           </div>
         </SheetContent>

@@ -70,10 +70,7 @@ const TwoColumns = (props: Props) => {
             type: "ADD_ELEMENT",
             payload: {
               containerId: id,
-              elementDetails: newComponent.id ? {
-                  ...newComponent,
-                  id:v4()
-              } : {
+              elementDetails:  newComponent.id ? newComponent : {
                 id: v4(),
                 type: "container",
                 name: "Container",

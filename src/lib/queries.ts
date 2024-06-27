@@ -928,6 +928,7 @@ const upsertContact = async (newContact: Partial<ContactInterface>) => {
         $push: { contacts: isUpserted.value._id },
       });
     }
+    return JSON.parse(JSON.stringify(isUpserted.value))
   } catch (err) {
     console.log(err);
   }
@@ -1042,6 +1043,12 @@ const getFunnelPageDetails = async (funnelPageId:string) => {
   }catch(err){
     console.log(err)
   }
+}
+
+
+export const getSubaccountDetails = async (subAccountId: string) => {
+  const response = await subAccountModel.findById(subAccountId).lean()
+  return JSON.parse(JSON.stringify(response))
 }
 
 

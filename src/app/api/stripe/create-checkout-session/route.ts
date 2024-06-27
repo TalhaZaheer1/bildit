@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { connectedAccountId, prices, subAccountId } = await req.json();
+  console.log("MISSING PRICES")
   if (!connectedAccountId || !prices.length) {
     return NextResponse.json(
       {
@@ -20,8 +21,7 @@ export async function POST(req: Request) {
     !process.env.NEXT_PUBLIC_PLATFORM_ONETIME_FEE ||
     !process.env.NEXT_PUBLIC_PLATFORM_AGENY_PERCENT
   ) {
-    return console.log("ENV VARIABLES FOR STRIPE CHECKOUT SESSION MISSING");
-  }
+    return NextResponse.json({ error: 'Fees do not exist' })  }
   const subscriptionExists = prices.find((prices) => prices.recurring);
   try {
     const session = await stripe.checkout.sessions.create(
@@ -57,6 +57,7 @@ export async function POST(req: Request) {
         stripeAccount: connectedAccountId,
       }
     );
+    console.log(session)
     return NextResponse.json({
       session: session.client_secret,
     });

@@ -28,12 +28,12 @@ type Props = {
 }
 
 
-const ContactUserFormSchema = z.object({
+export const ContactUserFormSchema = z.object({
   name: z.string().min(1, "Please provide a name"),
   email: z.string().min(1, "Please provide an email"),
 });
 
-const ContactForm = ({ apiCall, subTitle, title }: Props) => {
+const FunnelContactForm = ({ apiCall, subTitle, title }: Props) => {
   const form = useForm<z.infer<typeof ContactUserFormSchema>>({
     mode: 'onChange',
     resolver: zodResolver(ContactUserFormSchema),
@@ -107,4 +107,4 @@ const ContactForm = ({ apiCall, subTitle, title }: Props) => {
   )
 }
 
-export default ContactForm
+export default FunnelContactForm

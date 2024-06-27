@@ -28,6 +28,11 @@ const Text = ({ element }: Props) => {
       },
     })
   };
+  const handleDragStart = (e: React.DragEvent) => {
+    e.stopPropagation()
+    e.dataTransfer.setData('component', JSON.stringify(props.element))
+  }
+
   return (
     <div
       style={element.styles}
@@ -41,6 +46,7 @@ const Text = ({ element }: Props) => {
         }
       )}
       onClick={handleChangeSelected}
+      onDragStart={(e) => handleDragStart(e,)}
     >
       {state.editor.selectedElement.id === element.id &&
         !state.editor.liveMode && (

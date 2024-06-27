@@ -24,7 +24,7 @@ const Funnel = async ({params}: Props) => {
         className="flex justify-between gap-4 mb-4 text-muted-foreground"
         href={`/subaccount/${id}/funnels`}>Back</Link>
         <h1 className="text-3xl mb-8">{funnel.name}</h1>
-        <Tabs className="w-full">
+        <Tabs defaultValue='details' className="w-full">
             <TabsList className="grid  grid-cols-2 w-[50%] bg-transparent ">
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
