@@ -69,8 +69,10 @@ const SubscriptionFormWrapper = ({ customerId, planExists,agencyId }: Props) => 
             title: "Success!",
             description: "Subscription updated successfully",
           });
+          if(data?.plans?.defaultPriceId)
+            router.push(`/agency/${agencyId}/billing`);
+          else router.refresh()
           setClose();
-          router.push(`/agency/${agencyId}/billing`);
         }
       } catch (err) {
         toast({

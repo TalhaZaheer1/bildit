@@ -4,7 +4,7 @@ import { UserInterface } from "./User";
 import { SubAccountInterface } from "./SubAccount";
 import { InvitationInterface } from "./Invitation";
 import { SubscriptionInterface } from "./Subscription";
-
+import "./Subscription"
 export interface AgencyInterface extends Document {
   connectAccountId?: string;
   customerId: string;

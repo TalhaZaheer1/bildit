@@ -23,7 +23,6 @@ export default async function dbConnect() {
   }
   if (!cached.promise) {
     const opts = {
-      useNewUrlParser: true,
       useUnifiedTopology: true,
       maxIdleTimeMS: 10000 , // 30 seconds
       socketTimeoutMS: 10000 , // 45 seconds
