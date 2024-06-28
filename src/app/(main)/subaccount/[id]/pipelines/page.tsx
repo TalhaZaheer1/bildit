@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/db";
 import pipelineModel from "@/models/Pipeline";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -7,6 +8,7 @@ type Props = {
 };
 
 const Pipeline = async ({ params }: Props) => {
+  await dbConnect()
   const firstPipeLineExists = await pipelineModel
     .findOne({ subAccount: params.id })
     .lean();

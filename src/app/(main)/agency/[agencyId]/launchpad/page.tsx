@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import dbConnect from "@/lib/db";
 import { getStripeAuthLink, stripe } from "@/lib/stripe";
 import agencyModel from "@/models/Agency";
 import { CheckCircle, CheckCircleIcon } from "lucide-react";
@@ -19,6 +20,7 @@ type Props = {
 };
 
 const LaunchPadPage = async ({ params, searchParams }: Props) => {
+  await dbConnect()
   const agencyDetails = await agencyModel.findOne({ _id: params.agencyId });
   const stripeOAuthLink = getStripeAuthLink(
     "agency",

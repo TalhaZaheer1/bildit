@@ -1,4 +1,5 @@
 import Unauthorized from "@/components/global/Unauthorized";
+import dbConnect from "@/lib/db";
 import { getUserDetails, verifyAndAcceptInvitation } from "@/lib/queries";
 import { PermissionInterface } from "@/models/Permission";
 import { redirect } from "next/navigation";
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const page = async ({ searchParams }: Props) => {
+  await dbConnect()
   const agencyId = await verifyAndAcceptInvitation();
     if(!agencyId) return <Unauthorized />
     const user =  await getUserDetails()

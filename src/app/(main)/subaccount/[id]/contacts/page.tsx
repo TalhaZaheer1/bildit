@@ -14,12 +14,14 @@ import { TicketInterface } from "@/models/Ticket";
 import format from "date-fns/format";
 import React from "react";
 import CreateContactButton from "./_componants/CreateContactButton";
+import dbConnect from "@/lib/db";
 
 type Props = {
   params: { id: string };
 };
 
 const Contacts = async ({ params }: Props) => {
+  await dbConnect()
   const subAccountWithContact: SubAccountWithContacts = await subAccountModel
     .findById(params.id)
     .populate({

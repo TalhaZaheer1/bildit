@@ -1,4 +1,5 @@
 import MediaComponant from '@/components/media/MediaComponant'
+import dbConnect from '@/lib/db'
 import { getMedia } from '@/lib/queries'
 import React from 'react'
 
@@ -7,6 +8,7 @@ type Props = {
 }
 
 const Media = async ({params}: Props) => {
+  await dbConnect()
   const subAccountWithMedia = await getMedia(params.id)
   return (
     <div>

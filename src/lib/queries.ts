@@ -23,9 +23,11 @@ import funnelPageModel, { FunnelPageInterface } from "@/models/FunnelPage";
 import { revalidatePath } from "next/cache";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { isRedirectError } from "next/dist/client/components/redirect";
+import dbConnect from "./db";
 
 async function createTeamUser(user: any) {
   if (user.role === "AGENCY_OWNER") return;
+  await dbConnect()
   try {
     const authUser = await currentUser();
     const newUser = await userModel.create(user);
@@ -54,6 +56,7 @@ async function saveActivityLogsNotifications({
   description: string;
   subAccountId?: string;
 }) {
+  await dbConnect()
   try{
     const authUser = await currentUser();
   let userDetails;
@@ -150,6 +153,7 @@ async function saveActivityLogsNotifications({
 }
 
 async function verifyAndAcceptInvitation() {
+  await dbConnect()
   const authUser = await currentUser();
   if (!authUser) return redirect("/sign-in");
   const invitation = await invitationModel.findOne({
@@ -186,6 +190,7 @@ async function verifyAndAcceptInvitation() {
 }
 
 async function getUserDetails() {
+  await dbConnect()
   try{
   const authUser = await currentUser();
   if (!authUser) return;
@@ -215,6 +220,7 @@ async function updateAgencyDetails(
   agencyId: string,
   updates: Partial<AgencyInterface>
 ) {
+  await dbConnect()
   const isUpdated = await agencyModel.updateOne(
     { _id: agencyId },
     { ...updates }
@@ -222,6 +228,7 @@ async function updateAgencyDetails(
 }
 
 async function deleteAgency(agencyId: string): Promise<any> {
+  await dbConnect()
   try {
     const isAgencyDeleted = await agencyModel.deleteOne({ _id: agencyId });
     const isSubAccountsDeleted = await subAccountModel.deleteMany({
@@ -234,6 +241,7 @@ async function deleteAgency(agencyId: string): Promise<any> {
 }
 
 async function initUser(user: Partial<UserInterface>) {
+  await dbConnect()
   const authUser = await currentUser();
   if (!authUser) return;
   const newOrUpdatedUser = await userModel.updateOne(
@@ -264,6 +272,7 @@ async function upsertAgency(
   agencyDetails: Partial<AgencyInterface>,
   price?: string
 ) {
+  await dbConnect()
   if (!agencyDetails.companyEmail) return null;
   try {
     const updateDetails = await agencyModel.updateOne(
@@ -322,6 +331,7 @@ async function upsertAgency(
 }
 
 async function upsertSubAccount(subAccount: Partial<SubAccountInterface>) {
+  await dbConnect()
   const agencyOwner = (await userModel.findOne({
     agency: subAccount.agency,
     role: "AGENCY_OWNER",
@@ -412,6 +422,7 @@ async function upsertSubAccount(subAccount: Partial<SubAccountInterface>) {
 }
 
 async function getNotificationsAndUser(agencyId: string) {
+  await dbConnect()
   try {
     const notifications = await notificationModel
       .find(
@@ -430,6 +441,7 @@ async function getNotificationsAndUser(agencyId: string) {
 }
 
 async function getUserWithPermissions(userId: string) {
+  await dbConnect()
   try {
     const userWithPermissions = await userModel
       .findOne({ _id: userId })
@@ -452,6 +464,7 @@ async function upsertPermission(
   permissionId: string,
   permissionUpdates: Partial<PermissionInterface>
 ) {
+  await dbConnect()
   try {
     const isUpserted = await permissionModel
       .findByIdAndUpdate(
@@ -495,6 +508,7 @@ async function upsertPermission(
 }
 
 async function updateUser(userUpdates: Partial<UserInterface>) {
+  await dbConnect()
   try {
     const isUpdated = await userModel
       .updateOne(
@@ -514,6 +528,7 @@ async function updateUser(userUpdates: Partial<UserInterface>) {
 }
 
 async function deleteSubAccount(subAccountId: string) {
+  await dbConnect()
   try {
     const isAccDeleted = await subAccountModel.deleteOne({ _id: subAccountId });
     const isNotificationDeleted = await notificationModel.deleteMany({
@@ -534,6 +549,7 @@ async function deleteSubAccount(subAccountId: string) {
 }
 
 async function getUserById(userId: string) {
+  await dbConnect()
   try {
     const user = await userModel.findOne({ _id: userId }).lean();
     return JSON.parse(JSON.stringify(user));
@@ -543,6 +559,7 @@ async function getUserById(userId: string) {
 }
 
 async function deleteUser(userId: string) {
+  await dbConnect()
   try {
     const authUser = await currentUser();
     if (
@@ -565,6 +582,7 @@ async function deleteUser(userId: string) {
 }
 
 async function sendInvitation(data: Partial<InvitationInterface>) {
+  await dbConnect()
   try {
     const newInvitation = await invitationModel.create({
       ...data,
@@ -586,6 +604,7 @@ async function sendInvitation(data: Partial<InvitationInterface>) {
 }
 
 async function getMedia(subAccountId: string) {
+  await dbConnect()
   try {
     const subAccountWithMedia = await subAccountModel
       .findOne({ _id: subAccountId }, { media: 1, _id: 0 })
@@ -598,6 +617,7 @@ async function getMedia(subAccountId: string) {
 }
 
 async function createMedia(mediaData: Partial<MediaInterface>) {
+  await dbConnect()
   try {
     const newMediaFile = await mediaModel.create(mediaData);
     if (newMediaFile)
@@ -613,6 +633,7 @@ async function createMedia(mediaData: Partial<MediaInterface>) {
 }
 
 async function deleteMedia(mediaId: string, subAccountId: string) {
+  await dbConnect()
   try {
     const deleted = await mediaModel.deleteOne({ _id: mediaId });
     await subAccountModel.updateOne(
@@ -625,6 +646,7 @@ async function deleteMedia(mediaId: string, subAccountId: string) {
 }
 
 async function getPipelineDetails(pipelineId: string) {
+  await dbConnect()
   try {
     const pipeline = await pipelineModel
       .findOne({ _id: pipelineId })
@@ -661,6 +683,7 @@ const upsertPipeLine = async (
   subAccountId?: string
 ) => {
   try {
+    await dbConnect()
     const isUpserted = await pipelineModel
       .findByIdAndUpdate(
         newPipeLine.id || new Types.ObjectId(),
@@ -688,6 +711,7 @@ const upsertPipeLine = async (
 };
 
 const deletePipeLine = async (pipeLineId: string, subAccountId: string) => {
+  await dbConnect()
   try {
     const deleted = await pipelineModel.deleteOne({ _id: pipeLineId });
     if (deleted)
@@ -701,6 +725,7 @@ const deletePipeLine = async (pipeLineId: string, subAccountId: string) => {
 };
 
 const upsertLane = async (lane: Partial<LaneInterface>, pipeLineId: string) => {
+  await dbConnect()
   try {
     let order: number;
     if (!lane.order) {
@@ -735,6 +760,7 @@ const upsertLane = async (lane: Partial<LaneInterface>, pipeLineId: string) => {
 };
 
 const deleteLaneById = async (laneId: string, pipeLineId: string) => {
+  await dbConnect()
   try {
     const isDeleted = await laneModel.deleteOne({ _id: laneId });
     if (isDeleted.deletedCount === 1)
@@ -750,6 +776,7 @@ const upsertTicket = async (
   newTicket: Partial<TicketInterface>,
   laneId: string
 ) => {
+  await dbConnect()
   try {
     let order: number;
     if (!newTicket.order) {
@@ -787,6 +814,7 @@ const upsertTicket = async (
 };
 
 const updateLaneOrder = async (lanes: LaneDetailsInterface[]) => {
+  await dbConnect()
   const session: ClientSession = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
@@ -815,6 +843,7 @@ const updateTicketOrder = async (
   sourceLaneId?: string,
   destinationLaneId?: string
 ) => {
+  await dbConnect()
   const session: ClientSession = await mongoose.startSession();
   try {
     if (sourceLaneId) {
@@ -849,6 +878,7 @@ const createTag = async (
   newTag: Partial<TagInterface>,
   subAccountId: string
 ) => {
+  await dbConnect()
   try {
     const createdTag = await TagModal.create({
       ...newTag,
@@ -861,6 +891,7 @@ const createTag = async (
 };
 
 const getTags = async (subAccountId: string) => {
+  await dbConnect()
   try {
     const tags = JSON.parse(
       JSON.stringify(await TagModal.find({ subAccount: subAccountId }).lean())
@@ -874,7 +905,8 @@ const getTags = async (subAccountId: string) => {
 const getTeamMembersAndContacts = async (subAccountId: string) => {
   const foo = async () => {
     "use server";
-    try {
+  await dbConnect()
+  try {
       const teamMembers = (
         await permissionModel
           .find({ subAccount: subAccountId })
@@ -899,6 +931,7 @@ const getTeamMembersAndContacts = async (subAccountId: string) => {
 };
 
 const deleteTicket = async (ticketId: string, laneId: string) => {
+  await dbConnect()
   try {
     const deleted = await ticketModel.findByIdAndDelete(ticketId);
     if (deleted)
@@ -911,6 +944,7 @@ const deleteTicket = async (ticketId: string, laneId: string) => {
 };
 
 const upsertContact = async (newContact: Partial<ContactInterface>) => {
+  await dbConnect()
   try {
     const isUpserted = await contactModel.findByIdAndUpdate(
       newContact._id || new Types.ObjectId(),
@@ -935,6 +969,7 @@ const upsertContact = async (newContact: Partial<ContactInterface>) => {
 };
 
 export const getFunnels = async (subacountId: string) => {
+  await dbConnect()
   const funnels = await funnelModel
     .find({
       subAccount: subacountId,
@@ -950,7 +985,8 @@ const upsertFunnel = async (
   funnelId: string
 ) => {
   try {
-    const isUpserted = await funnelModel.findByIdAndUpdate(funnelId, {...updates,subAccount:subAccountId}, {
+  await dbConnect()
+  const isUpserted = await funnelModel.findByIdAndUpdate(funnelId, {...updates,subAccount:subAccountId}, {
       new: true,
       upsert: true,
       includeResultMetadata: true,
@@ -969,6 +1005,7 @@ const upsertFunnel = async (
 };
 
 const getFunnel = async (funnelId:string) => {
+  await dbConnect()
   try{
     const funnel = await funnelModel.findById(funnelId).populate({
       path:"funnelPages",
@@ -985,7 +1022,8 @@ const getFunnel = async (funnelId:string) => {
 }
 
 const updateFunnelProducts = async (liveProducts:string,funnelId:string) => {
-try{
+  await dbConnect()
+  try{
   await funnelModel.findByIdAndUpdate(funnelId,{
     liveProducts
   });
@@ -996,6 +1034,7 @@ try{
 
 const upsertFunnelPage = async (subAccountId:string,updates:Partial<FunnelPageInterface>,funnelId:string,funnelPageId?:string) => {
   if(!subAccountId || !funnelId) return
+  await dbConnect()
   try{
     const isUpserted = await funnelPageModel.findByIdAndUpdate(funnelPageId || new mongoose.Types.ObjectId(),{
       ...updates,
@@ -1025,6 +1064,7 @@ const upsertFunnelPage = async (subAccountId:string,updates:Partial<FunnelPageIn
 }
 
 const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
+  await dbConnect()
   try{
     const deleted = await funnelPageModel.deleteOne({_id:funnelPageId});
     if(deleted.deletedCount > 0)[
@@ -1037,6 +1077,7 @@ const deleteFunnelPage = async (funnelPageId:string,funnelId:string) =>{
 }
 
 const getFunnelPageDetails = async (funnelPageId:string) => {
+  await dbConnect()
   try{
     const funnelPage = await funnelPageModel.findById(funnelPageId);
     return JSON.parse(JSON.stringify(funnelPage));
@@ -1047,11 +1088,13 @@ const getFunnelPageDetails = async (funnelPageId:string) => {
 
 
 const getSubaccountDetails = async (subAccountId: string) => {
+  await dbConnect()
   const response = await subAccountModel.findById(subAccountId).lean()
   return JSON.parse(JSON.stringify(response))
 }
 
 const getDomainDetails = async (domainName:string) => {
+  await dbConnect()
   try{
     const funnel = await funnelModel.findOne({
       subDomainName:domainName
@@ -1063,6 +1106,7 @@ const getDomainDetails = async (domainName:string) => {
 }
 
 const getPipelines = async (subAccountId: string) => {
+  await dbConnect()
   const response = await pipelineModel.find({
     subAccount:subAccountId
   }).populate({

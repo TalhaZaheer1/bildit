@@ -12,7 +12,6 @@ type Props = {
 };
 
 const layout = async ({ children, params: { agencyId } }: Props) => {
-  await dbConnect();
   const authUser = await currentUser();
   if (!authUser) redirect("/");
   const userAgencyId = await verifyAndAcceptInvitation();

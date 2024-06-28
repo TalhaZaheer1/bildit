@@ -16,12 +16,14 @@ import {
 } from '@/components/ui/table'
 import clsx from "clsx";
 import Stripe from "stripe";
+import dbConnect from "@/lib/db";
 
 type Props = {
   params: { agencyId: string };
 };
 
 const Billing = async ({ params }: Props) => {
+  await dbConnect()
   const allAddOns = await stripe.products.list({
     ids: addOnProducts.map((addon) => addon.id),
     expand: ["data.default_price"],

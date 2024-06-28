@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import dbConnect from "@/lib/db";
 import { getStripeAuthLink, stripe } from "@/lib/stripe";
 import subAccountModel from "@/models/SubAccount";
 import { CheckCircle, CheckCircleIcon } from "lucide-react";
@@ -21,6 +22,7 @@ type Props = {
 //TODO:Add Stripe connect feature in subaccount
 
 const LaunchPadPage = async ({ params, searchParams }: Props) => {
+  await dbConnect()
   const subAccountdetails = await subAccountModel.findOne({ _id: params.id });
   if (!subAccountdetails) return;
   const stripeOAuthLink = getStripeAuthLink(

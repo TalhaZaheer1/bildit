@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/db";
 import { stripe } from "@/lib/stripe/index";
 import { subscriptionCreated } from "@/lib/stripe/stripeActions";
 import agencyModel from "@/models/Agency";
@@ -5,6 +6,7 @@ import subscriptionModel from "@/models/Subscription";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+  await dbConnect()
   try {
     const { customerId, priceId } = await req.json();
     const agency = await agencyModel.findOne({ customerId });

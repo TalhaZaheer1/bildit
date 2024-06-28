@@ -1,5 +1,6 @@
 import AgencyDetails from "@/components/forms/AgencyDetails";
 import UserDetails from "@/components/forms/UserDetails";
+import dbConnect from "@/lib/db";
 import agencyModel, { AgencyInterface } from "@/models/Agency";
 import { SubAccountInterface } from "@/models/SubAccount";
 import userModel, { UserInterface } from "@/models/User";
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const Page = async ({ params }: Props) => {
+  await dbConnect()
   const authUser = await currentUser();
   if (!authUser) return null;
   const agencyId = params.agencyId;

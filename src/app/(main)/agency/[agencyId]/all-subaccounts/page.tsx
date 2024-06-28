@@ -25,12 +25,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import DeleteSubAccountButton from "@/components/global/DeleteSubAccountButton";
+import dbConnect from "@/lib/db";
 
 type Props = {
   params: { agencyId: string };
 };
 
 const SubAccountsPage = async ({ params }: Props) => {
+  await dbConnect()
   const user = await getUserDetails();
   if (!user) return;
 

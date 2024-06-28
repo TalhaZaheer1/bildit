@@ -1,4 +1,5 @@
 import SubAccountDetails from "@/components/forms/SubAccountDetails";
+import dbConnect from "@/lib/db";
 import { AgencyInterface } from "@/models/Agency";
 import subAccountModel, { SubAccountInterface } from "@/models/SubAccount";
 import userModel, { UserInterface } from "@/models/User";
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const Settings = async ({ params }: Props) => {
+  await dbConnect()
   const authUser = await currentUser();
   if (!authUser) redirect("/");
   const userWithName = await userModel.findOne(

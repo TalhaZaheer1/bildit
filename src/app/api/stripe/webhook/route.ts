@@ -1,3 +1,4 @@
+import dbConnect from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { subscriptionCreated } from "@/lib/stripe/stripeActions";
 import { headers } from "next/headers";
@@ -18,6 +19,7 @@ const allowedEventTypes = new Set([
 ]);
 
 export async function POST(req: Request) {
+  await dbConnect()
   const rawEvent = await req.text();
   const sig = headers().get("Stripe-Signature") as string;
   let event;

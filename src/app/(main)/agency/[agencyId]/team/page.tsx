@@ -7,12 +7,14 @@ import SendInvitation from "@/components/forms/SendInvitation";
 import { coulumnDef } from "./columns";
 import { UserInterfaceForTable } from "@/lib/types";
 import { Plus } from "lucide-react";
+import dbConnect from "@/lib/db";
 
 type Props = {
   params: { agencyId: string };
 };
 
 const page = async ({ params }: Props) => {
+  await dbConnect()
   const authUser = await currentUser();
   if (!authUser) return;
   const agencyUsers = await userModel.find({ agency: params.agencyId }).populate([

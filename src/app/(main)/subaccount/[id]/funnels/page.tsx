@@ -4,8 +4,10 @@ import FunnelsDataTable from './data-table'
 import { Plus } from 'lucide-react'
 import { columns } from './columns'
 import FunnelForm from '@/components/forms/FunnelForm'
+import dbConnect from '@/lib/db'
 
 const Funnels = async ({ params }: { params: { id: string } }) => {
+  await dbConnect()
   const funnels = await getFunnels(params.id)
   if (!funnels) return null
 
