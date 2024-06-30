@@ -19,7 +19,6 @@ const page = async ({ params }: Props) => {
   if (!pipelineDetails) redirect(`/subaccount/${params.id}/pipelines`);
   const allPipelines = await pipelineModel.find({ subAccount: params.id });
   const tags = await getTags(params.id);
-//TODO:Create a 
   return <Tabs defaultValue="view" className="w-full">
     <TabsList className="bg-transparent border-b-2 h-16 w-full justify-between mb-4">
         <PipeLineInfoBar pipeLineId={params.pipelineId} allPipelines={JSON.parse(JSON.stringify(allPipelines))} subAccountId={params.id} />

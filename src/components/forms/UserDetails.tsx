@@ -201,7 +201,7 @@ const UserDetails = ({ type, subAccounts, userData, id }: Props) => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form className="flex flex-col gap-2" onSubmit={form.handleSubmit(handleSubmit)}>
             <FormField
               disabled={form.formState.isSubmitting}
               name="avatarUrl"
@@ -283,7 +283,7 @@ const UserDetails = ({ type, subAccounts, userData, id }: Props) => {
                 </FormItem>
               )}
             />
-            <Button disabled={form.formState.isSubmitting} type="submit">
+            <Button className="w-full md:w-fit mt-4 " disabled={form.formState.isSubmitting} type="submit">
               {form.formState.isSubmitting ? <Loader2 /> : "Save user detials"}
             </Button>
             {authUserDetails?.role === "AGENCY_OWNER" && (

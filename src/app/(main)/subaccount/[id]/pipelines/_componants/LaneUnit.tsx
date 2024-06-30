@@ -64,11 +64,16 @@ const LaneUnit = ({
   const { toast } = useToast();
   const { setOpen, setClose } = useModal();
   const router = useRouter();
-  const [circleColor, setCirleColor] = useState();
+  const [circleColor, setCirleColor] = useState<string>("");
   const totalValue = lane?.tickets?.reduce(
     (total, ticket) => total + ticket?.value,
     0
   );
+  const generateColor = () => {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    setCirleColor("#" + randomColor);
+  };
+  generateColor()
   const editLane = () => {
     setOpen(
       <CustomModal
@@ -212,19 +217,22 @@ const LaneUnit = ({
         droppableId={lane._id}
       >
         {(provided) => (
-          <div {...provided.droppableProps} className="flex h-full items-center flex-col gap-3" ref={provided.innerRef} >
+          <div
+            {...provided.droppableProps}
+            className="flex h-full items-center flex-col gap-3"
+            ref={provided.innerRef}
+          >
             {lane.tickets?.map((t, index) => (
               <Draggable draggableId={t._id} key={t._id} index={index}>
-                {(provided,snapshot) => (
-
-                    <TicketUnit
+                {(provided, snapshot) => (
+                  <TicketUnit
                     provided={provided}
                     snapshot={snapshot}
-                      ticketDetails={t}
-                      subAccountId={subAccountId}
-                      laneId={lane._id}
-                      tags={tags}
-                    />
+                    ticketDetails={t}
+                    subAccountId={subAccountId}
+                    laneId={lane._id}
+                    tags={tags}
+                  />
                 )}
               </Draggable>
             ))}

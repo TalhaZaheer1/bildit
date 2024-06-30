@@ -8,8 +8,11 @@ import { ModalProvider } from "@/providers/ModalProvider";
 const font = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Plura",
+  title: "bildit",
   description: "All in one agency solution",
+  icons:{
+    icon:"/assets/plura-logo.svg"
+  }
 };
 
 export default async function RootLayout({

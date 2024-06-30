@@ -18,14 +18,13 @@ function Navigation({ user }: Props) {
                     height={40}
                     alt="plura logo"
                 />
-                <span className="text-xl font-bold">Plura.</span>
+                <span className="text-xl font-bold">bildit.</span>
             </aside>
             <nav className="hidden md:block absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                <ul className="flex items-center justify-center gap-8">
-                    <Link href={"#"}>Pricing</Link>
-                    <Link href={"#"}>About</Link>
-                    <Link href={"#"}>Documentation</Link>
-                    <Link href={"#"}>Features</Link>
+                <ul className="flex items-center text-lg font-bold justify-center gap-8">
+                    <Link href={"#pricing-plans"}>Pricing</Link>
+                    <Link href={"#features"}>Features</Link>
+                    <Link href={"#about"} >About</Link>
                 </ul>
             </nav>   
             <aside className="flex gap-2 items-center">
