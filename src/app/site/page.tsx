@@ -204,7 +204,7 @@ export default async function Home() {
             />
             <p className="text-muted-foreground text-center px-10 md:text-xl">
                 How can one manage an agency without a Task Manager.Our built-in Task Manager 
-                Board can organize your workflows and keep your up to date.
+                Board can organize your workflows and keep you up to date.
             </p>
           </div>
           <div className="flex flex-col gap-6 items-center">
