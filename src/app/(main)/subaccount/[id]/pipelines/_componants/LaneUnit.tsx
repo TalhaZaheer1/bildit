@@ -73,7 +73,10 @@ const LaneUnit = ({
     const randomColor = Math.floor(Math.random() * 16777215).toString(16);
     setCirleColor("#" + randomColor);
   };
-  generateColor()
+  useEffect(() => {
+    if(!snapshot.isDragging)
+    generateColor()
+  },[snapshot.isDragging])
   const editLane = () => {
     setOpen(
       <CustomModal
@@ -125,7 +128,7 @@ const LaneUnit = ({
         {...provided.dragHandleProps}
         className="flex justify-between items-center"
       >
-        <div className="flex gap-4">
+        <div className="flex gap-4 pl-3">
           <div
             className="w-5 h-5 rounded-full"
             style={{ backgroundColor: circleColor }}

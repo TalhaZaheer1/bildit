@@ -234,7 +234,7 @@ const PipeLineView = ({
         >
           {(provided) => (
             <div
-              className="flex overflow-x-auto overflow-y-hidden h-full transform-none"
+              className="flex overflow-auto h-full transform-none"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
