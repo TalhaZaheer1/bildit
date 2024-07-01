@@ -54,7 +54,7 @@ export const colorMappings = [
 export const pricingCards = [
   {
     title: "Starter",
-    description: "Perfect for trying out plura",
+    description: "Perfect for trying out bildit",
     price: "Free",
     duration: "",
     highlight: "Key features",
