@@ -50,10 +50,10 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
     dispatch({ type: 'TOGGLE_LIVE_MODE' })
   }
   return (
-    <div className='mr-[385px] h-full overflow-y-scroll'>
+    <div className={`${state.editor.liveMode || state.editor.previewMode ? "" : "mr-[385px]"} h-full overflow-auto`}>
     <div
       className={clsx(
-        'use-automation-zoom-in h-full bg-background transition-all rounded-md',
+        'use-automation-zoom-in h-full  bg-background transition-all rounded-md',
         {
           '!p-0 !mr-0':
             state.editor.previewMode === true || state.editor.liveMode === true,
