@@ -25,8 +25,8 @@ export const columns: ColumnDef<FunnelInterface>[] = [
     accessorKey: 'updatedAt',
     header: 'Last Updated',
     cell: ({ row }) => {
-      const date = ` ${row.original.updatedAt} ${row.original.updatedAt} `
-      return <span className="text-muted-foreground">{date}</span>
+      const date = `${row.original.updatedAt}`
+      return <span className="text-muted-foreground">{date.slice(0,10)}</span>
     },
   },
   {

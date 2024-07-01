@@ -219,7 +219,7 @@ const Container = ({ element }: Props) => {
         "max-w-full w-full": type === "container" || type === "2Col",
         "h-fit": type === "container",
         "min-h-full h-fit": type === "__body",
-        "overflow-scroll": type === "__body",
+        "overflow-auto": type === "__body",
         "flex flex-col !md:flex-row": type === "2Col",
         "!border-blue-500":
           state.editor.selectedElement.id === id &&
@@ -232,7 +232,7 @@ const Container = ({ element }: Props) => {
         "!border-solid":
           state.editor.selectedElement.id === id && !state.editor.liveMode,
         "border-slate-500 border-dashed border-[1px]": !state.editor.liveMode,
-        "pb-20":type === "__body" && !(state.editor.liveMode || state.editor.previewMode)
+        "pb-[7rem]":type === "__body" && !(state.editor.liveMode || state.editor.previewMode)
       })}
       onDrop={(e) => handleOnDrop(e)}
       onDragOver={(e) => e.preventDefault()}
